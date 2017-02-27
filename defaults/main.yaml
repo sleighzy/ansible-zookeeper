@@ -1,0 +1,7 @@
+---
+
+zookeeper_version: 3.4.8
+
+# Variables for templating zookeeper.conf.j2
+zookeeper_snapshot_dir: /var/lib/zookeeper/data
+zookeeper_client_port: 2181

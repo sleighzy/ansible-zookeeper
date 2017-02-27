@@ -1,0 +1,17 @@
+[Unit]
+Description=Apache Zookeeper
+Documentation=http://zookeeper.apache.org
+Requires=network.target
+After=network.target
+
+[Service]
+Type=forking
+Environment='ZOO_LOG_DIR=/var/log/zookeeper'
+Environment='ZOO_LOG4J_PROP=INFO,ROLLINGFILE'
+ExecStart=/usr/share/zookeeper/bin/zkServer.sh start
+ExecStop=/usr/share/zookeeper/bin/zkServer.sh stop
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias=zookeeper.service

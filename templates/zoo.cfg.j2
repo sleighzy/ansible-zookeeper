@@ -1,0 +1,42 @@
+# The number of milliseconds of each tick
+tickTime=2000
+
+# The number of ticks that the initial
+# synchronization phase can take
+initLimit=10
+
+# The number of ticks that can pass between
+# sending a request and getting an acknowledgement
+syncLimit=5
+
+# the directory where the snapshot is stored.
+# do not use /tmp for storage, /tmp here is just
+# example sakes.
+dataDir={{ zookeeper_snapshot_dir }}
+
+# the port at which the clients will connect
+clientPort={{ zookeeper_client_port }}
+
+# the maximum number of client connections.
+# increase this if you need to handle more clients
+#maxClientCnxns=60
+
+#
+# Be sure to read the maintenance section of the
+# administrator guide before turning on autopurge.
+#
+# http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance
+#
+# The number of snapshots to retain in dataDir
+#autopurge.snapRetainCount=3
+# Purge task interval in hours
+# Set to "0" to disable auto purge feature
+#autopurge.purgeInterval=1
+
+# List of clustered ZooKeeper nodes.
+# Port 2888 is the default quorum port and 3888 is the default
+# leader election port. These must be unique per server.
+# Each server also needs a /var/lib/zookeeper/myid file created containing
+# a single unique number, e.g. 1, 2, etc.
+#server.1=hostname1:2888:3888
+#server.2=hostname2:2888:3888
