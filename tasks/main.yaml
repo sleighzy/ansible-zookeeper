@@ -47,7 +47,7 @@
 # /usr/share/zookeeper/conf/zoo.cfg is the default file ZooKeeper will use when starting
 - name: Template configuration file to /usr/share/zookeeper/conf/zoo.cfg
   template:
-    src: templates/zoo.cfg.j2
+    src: zoo.cfg.j2
     dest: /usr/share/zookeeper/conf/zoo.cfg
   notify:
     - Restart ZooKeeper service
