@@ -25,7 +25,7 @@ script:
   # Check syntax of Ansible role
   - sudo docker exec centos-${OS_VERSION} ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --syntax-check
   # Run Ansible role
-  - sudo docker exec centos-${OS_VERSION} ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml
+  - sudo docker exec centos-${OS_VERSION} ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --verbose
   # Check that the ZooKeeper service is running
   - sudo docker exec centos-${OS_VERSION} systemctl status zookeeper 2>&1 | awk 'FNR == 3 {print}' | grep "active (running)" && (echo "Service running - pass" && exit 0) || (echo "Service running - fail" && exit 1)
   # Check that a Znode can be successfully created
