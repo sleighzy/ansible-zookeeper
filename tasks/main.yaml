@@ -67,7 +67,7 @@
 
 - name: Copy ZooKeeper systemd service file
   copy:
-    src: files/zookeeper.service
+    src: zookeeper.service
     dest: /usr/lib/systemd/system/zookeeper.service
   tags:
     - zookeeper_service
