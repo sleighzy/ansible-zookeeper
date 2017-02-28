@@ -13,7 +13,7 @@ before_install:
 
 install:
   # Run the container in detached mode. The sleep 300 will keep the container running for 300 seconds before it is killed.
-  - sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/ansible-zookeeper:ro --name centos-${OS_VERSION} centos:${OS_VERSION} sleep 300
+  - sudo docker run --privileged --detach --volume="${PWD}":/etc/ansible/roles/ansible-zookeeper:ro --volume=/sys/fs/cgroup:/sys/fs/cgroup -e "container=docker" --name centos-${OS_VERSION} centos:${OS_VERSION} sleep 300
   # Install the EPEL packages
   - sudo docker exec centos-${OS_VERSION} yum -y install epel-release
   # Install the Ansible packages
