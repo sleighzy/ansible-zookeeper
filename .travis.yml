@@ -5,34 +5,31 @@ sudo: required
 services:
   - docker
 
-env:
-  - OS_VERSION=7
-
 before_install:
-  - sudo docker pull centos:${OS_VERSION}
+  - sudo docker pull centos/systemd
 
 install:
   # Run the container in detached mode. The sleep 300 will keep the container running for 300 seconds before it is killed.
-  - sudo docker run --privileged --detach --volume="${PWD}":/etc/ansible/roles/ansible-zookeeper:ro --volume=/sys/fs/cgroup:/sys/fs/cgroup -e "container=docker" --name centos-${OS_VERSION} centos:${OS_VERSION} sleep 300
+  - sudo docker run --privileged --detach --volume="${PWD}":/etc/ansible/roles/ansible-zookeeper:ro --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --name centos centos/systemd sleep 300
   # Install the EPEL packages
-  - sudo docker exec centos-${OS_VERSION} yum -y install epel-release
+  - sudo docker exec centos yum -y install epel-release
   # Install the Ansible packages
-  - sudo docker exec centos-${OS_VERSION} yum -y install ansible
+  - sudo docker exec centos yum -y install ansible
 
 script:
   # Install role dependencies.
-  - sudo docker exec centos-${OS_VERSION} ansible-galaxy install -r /etc/ansible/roles/ansible-zookeeper/tests/requirements.yml
+  - sudo docker exec centos ansible-galaxy install -r /etc/ansible/roles/ansible-zookeeper/tests/requirements.yml
   # Check syntax of Ansible role
-  - sudo docker exec centos-${OS_VERSION} ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --syntax-check
+  - sudo docker exec centos ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --syntax-check
   # Run Ansible role
-  - sudo docker exec centos-${OS_VERSION} ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --verbose
+  - sudo docker exec centos ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --verbose
   # Check that the ZooKeeper service is running
-  - sudo docker exec centos-${OS_VERSION} systemctl status zookeeper 2>&1 | awk 'FNR == 3 {print}' | grep "active (running)" && (echo "Service running - pass" && exit 0) || (echo "Service running - fail" && exit 1)
+  - sudo docker exec centos systemctl status zookeeper 2>&1 | awk 'FNR == 3 {print}' | grep "active (running)" && (echo "Service running - pass" && exit 0) || (echo "Service running - fail" && exit 1)
   # Check that a Znode can be successfully created
-  - sudo docker exec centos-${OS_VERSION} /usr/share/zookeeper/bin/zkCli.sh create /TestZnode1 "test-node-1" 2>&1 | awk -F\" '/Created/ {print $1}' | grep "Created" && (echo "Znode ceate test - pass" && exit 0) || (echo "Znode create test - fail" && exit 1)
+  - sudo docker exec centos /usr/share/zookeeper/bin/zkCli.sh create /TestZnode1 "test-node-1" 2>&1 | awk -F\" '/Created/ {print $1}' | grep "Created" && (echo "Znode ceate test - pass" && exit 0) || (echo "Znode create test - fail" && exit 1)
 
 after_script:
-  - sudo docker stop centos-${OS_VERSION}
+  - sudo docker stop centos
 
 notifications:
   email:
