@@ -34,5 +34,4 @@ after_script:
   - docker stop zookeeper && docker rm zookeeper
 
 notifications:
-  email:
-    - giveit@gmail.com
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
