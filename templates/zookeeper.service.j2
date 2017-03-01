@@ -6,11 +6,13 @@ After=network.target
 
 [Service]
 Type=forking
-Environment='ZOO_LOG_DIR=/var/log/zookeeper'
+Environment='ZOO_LOG_DIR={{ zookeeper_log_dir }}'
 Environment='ZOO_LOG4J_PROP=INFO,ROLLINGFILE'
-ExecStart=/usr/share/zookeeper/bin/zkServer.sh start
-ExecStop=/usr/share/zookeeper/bin/zkServer.sh stop
+ExecStart={{ zookeeper_dir }}/bin/zkServer.sh start
+ExecStop={{ zookeeper_dir }}/bin/zkServer.sh stop
 Restart=on-failure
+User={{ zookeeper_user }}
+Group={{ zookeeper_group }}
 
 [Install]
 WantedBy=multi-user.target

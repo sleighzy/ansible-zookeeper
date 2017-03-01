@@ -1,63 +1,99 @@
 ---
 
+- name: Create zookeeper group
+  group:
+    name: '{{ zookeeper_group }}'
+    state: present
+  tags:
+    - zookeeper_user
+
+- name: Create zookeeper user
+  user:
+    name: '{{ zookeeper_user }}'
+    group: '{{ zookeeper_group }}'
+    state: present
+    createhome: no
+  tags:
+    - zookeeper_group
+
 - name: Download Apache ZooKeeper
   get_url:
     url: http://www-eu.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz
     dest: /tmp
   tags:
-    - zookeeper_install
+    - zookeeper_download
 
 - name: Unpack Apache ZooKeeper
   unarchive:
     src: /tmp/zookeeper-{{ zookeeper_version }}.tar.gz
-    dest: /usr/share
+    dest: '{{ zookeeper_root_dir }}'
     copy: no
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
   tags:
-    - zookeeper_install
+    - zookeeper_unpack
 
-- name: Delete ZooKeeper tar.gz file
+- name: Create symlink to ZooKeeper installation
   file:
-    path: /tmp/zookeeper-{{ zookeeper_version }}.tar.gz
-    state: absent
-  tags:
-    - zookeeper_install
-
-- name: Create symlink to ZooKeeper
-  file:
-    src: /usr/share/zookeeper-{{ zookeeper_version }}
-    dest: /usr/share/zookeeper
+    src: '{{ zookeeper_install_dir }}'
+    dest: '{{ zookeeper_dir }}'
     state: link
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
   tags:
-    - zookeeper_install
+    - zookeeper_dirs
 
 - name: Create directory for snapshot files
   file:
-    path: /var/lib/zookeeper/data
+    path: '{{ zookeeper_snapshot_dir }}'
     state: directory
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
   tags:
-    - zookeeper_install
+    - zookeeper_dirs
 
-- name: Create /var/log/zookeeper directory
+- name: Create zookeeper log directory
   file:
-    path: /var/log/zookeeper
+    path: '{{ zookeeper_log_dir }}'
     state: directory
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
   tags:
-    - zookeeper_install
+    - zookeeper_dirs
 
 # /usr/share/zookeeper/conf/zoo.cfg is the default file ZooKeeper will use when starting
-- name: Template configuration file to /usr/share/zookeeper/conf/zoo.cfg
+- name: Template configuration file to zoo.cfg
   template:
     src: zoo.cfg.j2
-    dest: /usr/share/zookeeper/conf/zoo.cfg
+    dest: '{{ zookeeper_dir }}/conf/zoo.cfg'
   notify:
     - Restart ZooKeeper service
+  tags:
+    - zookeeper_config
+
+- name: Create directory for symlink to ZooKeeper configuration file
+  file:
+    path: /etc/zookeeper
+    state: directory
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
+  tags:
+    - zookeeper_config
+
+- name: Create symlink to ZooKeeper configuration file
+  file:
+    src: '{{ zookeeper_dir}}/conf/zoo.cfg'
+    dest: /etc/zookeeper/zoo.cfg
+    state: link
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
   tags:
     - zookeeper_config
 
 # Uncomment the log4j.properties line for setting the maximum number of logs to rollover and keep
 - name: Set maximum log rollover history
   replace:
-    dest: /usr/share/zookeeper/conf/log4j.properties
+    dest: '{{ zookeeper_dir }}/conf/log4j.properties'
     regexp: '^#log4j.appender.ROLLINGFILE.MaxBackupIndex'
     replace: 'log4j.appender.ROLLINGFILE.MaxBackupIndex'
   notify:
@@ -65,10 +101,12 @@
   tags:
     - zookeeper_config
 
-- name: Copy ZooKeeper systemd service file
-  copy:
-    src: zookeeper.service
+- name: Template ZooKeeper systemd service file
+  template:
+    src: zookeeper.service.j2
     dest: /usr/lib/systemd/system/zookeeper.service
+  notify:
+    - Restart ZooKeeper service
   tags:
     - zookeeper_service
 
@@ -85,13 +123,12 @@
   tags:
     - zookeeper_service
 
-# Cleanup install by deleting downloaded Java archive
-- name: Delete Java JDK tar.gz file
+# Cleanup install by deleting downloaded ZooKeeper archive
+- name: Delete ZooKeeper tar.gz file
   file:
     path: /tmp/zookeeper-{{ zookeeper_version }}.tar.gz
     state: absent
   tags:
-    - zookeeper_install
     - zookeeper_cleanup
 
 # Set Ansible fact that ZooKeeper has completed installation. This is so that this role can be used in
@@ -101,4 +138,4 @@
   set_fact:
     zookeeper_installed: true
   tags:
-    - zookeeper_install
+    - zookeeper_install_fact

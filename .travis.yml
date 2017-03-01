@@ -12,26 +12,26 @@ before_install:
 install:
   # Run the container in detached mode. The usage of privileged, mounting cgroup volumes and /usr/lib/systemd/systemd are required so that systemd can be
   # used without the "Failed to get D-Bus connection: Operation not permitted" error occurring when running commands, e.g. systemctl daemon-reload
-  - docker run --privileged --detach --volume="${PWD}":/etc/ansible/roles/ansible-zookeeper:ro --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --name centos centos/systemd /usr/lib/systemd/systemd
+  - docker run --privileged --detach --volume="${PWD}":/etc/ansible/roles/ansible-zookeeper:ro --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --name zookeeper centos/systemd /usr/lib/systemd/systemd
   # Install the EPEL packages
-  - docker exec centos yum -y install epel-release
+  - docker exec zookeeper yum -y install epel-release
   # Install the Ansible packages
-  - docker exec centos yum -y install ansible
+  - docker exec zookeeper yum -y install ansible
 
 script:
   # Install role dependencies.
-  - docker exec centos ansible-galaxy install -r /etc/ansible/roles/ansible-zookeeper/tests/requirements.yml
+  - docker exec zookeeper ansible-galaxy install -r /etc/ansible/roles/ansible-zookeeper/tests/requirements.yml
   # Check syntax of Ansible role
-  - docker exec centos ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --syntax-check
+  - docker exec zookeeper ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --syntax-check
   # Run Ansible role
-  - docker exec centos ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --verbose
+  - docker exec zookeeper ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --verbose
   # Check that the ZooKeeper service is running
-  - docker exec centos systemctl status zookeeper 2>&1 | awk 'FNR == 3 {print}' | grep "active (running)" && (echo "Service running - pass" && exit 0) || (echo "Service running - fail" && exit 1)
+  - docker exec zookeeper systemctl status zookeeper 2>&1 | awk 'FNR == 3 {print}' | grep "active (running)" && (echo "Service running - pass" && exit 0) || (echo "Service running - fail" && exit 1)
   # Check that a Znode can be successfully created
-  - docker exec centos /usr/share/zookeeper/bin/zkCli.sh create /TestZnode1 "test-node-1" 2>&1 | awk -F\" '/Created/ {print $1}' | grep "Created" && (echo "Znode ceate test - pass" && exit 0) || (echo "Znode create test - fail" && exit 1)
+  - docker exec zookeeper /usr/share/zookeeper/bin/zkCli.sh create /TestZnode1 "test-node-1" 2>&1 | awk -F\" '/Created/ {print $1}' | grep "Created" && (echo "Znode ceate test - pass" && exit 0) || (echo "Znode create test - fail" && exit 1)
 
 after_script:
-  - docker stop centos && docker rm centos
+  - docker stop zookeeper && docker rm zookeeper
 
 notifications:
   email:
