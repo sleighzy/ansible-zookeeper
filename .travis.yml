@@ -10,7 +10,8 @@ before_install:
   - docker pull centos/systemd
 
 install:
-  # Run the container in detached mode
+  # Run the container in detached mode. The usage of privileged, mounting cgroup volumes and /usr/lib/systemd/systemd are required so that systemd can be
+  # used without the "Failed to get D-Bus connection: Operation not permitted" error occurring when running commands, e.g. systemctl daemon-reload
   - docker run --privileged --detach --volume="${PWD}":/etc/ansible/roles/ansible-zookeeper:ro --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --name centos centos/systemd /usr/lib/systemd/systemd
   # Install the EPEL packages
   - docker exec centos yum -y install epel-release
