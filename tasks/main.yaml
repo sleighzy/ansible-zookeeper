@@ -16,10 +16,16 @@
   tags:
     - zookeeper_group
 
+- name: Check if ZooKeeper has already been downloaded and unpacked
+  stat:
+    path: '{{ zookeeper_root_dir }}/zookeeper-{{ zookeeper_version }}'
+  register: dir
+
 - name: Download Apache ZooKeeper
   get_url:
     url: http://www-eu.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz
     dest: /tmp
+  when: dir.stat.exists == False
   tags:
     - zookeeper_download
 
@@ -30,6 +36,7 @@
     copy: no
     group: '{{ zookeeper_group }}'
     owner: '{{ zookeeper_user }}'
+  when: dir.stat.exists == False
   tags:
     - zookeeper_unpack
 
@@ -43,9 +50,9 @@
   tags:
     - zookeeper_dirs
 
-- name: Create directory for snapshot files
+- name: Create directory for snapshot files and myid file
   file:
-    path: '{{ zookeeper_snapshot_dir }}'
+    path: '{{ zookeeper_data_dir }}'
     state: directory
     group: '{{ zookeeper_group }}'
     owner: '{{ zookeeper_user }}'
@@ -90,6 +97,15 @@
   tags:
     - zookeeper_config
 
+- name: Template myid to {{ zookeeper_data_dir}}/myid
+  template:
+    src: myid.j2
+    dest: '{{ zookeeper_data_dir }}/myid'
+  notify:
+    - Restart ZooKeeper service
+  tags:
+    - zookeeper_config
+
 # Uncomment the log4j.properties line for setting the maximum number of logs to rollover and keep
 - name: Set maximum log rollover history
   replace:
@@ -106,12 +122,8 @@
     src: zookeeper.service.j2
     dest: /usr/lib/systemd/system/zookeeper.service
   notify:
+    - Reload systemd
     - Restart ZooKeeper service
-  tags:
-    - zookeeper_service
-
-- name: Reload the services daemon
-  command: systemctl daemon-reload
   tags:
     - zookeeper_service
 

@@ -13,5 +13,13 @@ zookeeper_dir: '{{ zookeeper_root_dir }}/zookeeper'
 zookeeper_log_dir: /var/log/zookeeper
 
 # Variables for templating zookeeper.conf.j2
-zookeeper_snapshot_dir: /var/lib/zookeeper/data
+zookeeper_data_dir: /var/lib/zookeeper
+zookeeper_data_log_dir: /var/lib/zookeeper
 zookeeper_client_port: 2181
+
+# Uniquely identifies the ZooKeeper instance when clustering ZooKeeper nodes.
+# This value is placed in the /var/lib/zookeeper/myid file.
+zookeeper_id: 1
+
+zookeeper_leader_port: 2888
+zookeeper_election_port: 3888

@@ -4,6 +4,9 @@
 
 Ansible role for installing and configuring Apache ZooKeeper on RHEL / CentOS 7.
 
+This role can be used to install and cluster multiple ZooKeeper nodes, this uses all hosts defined for the "zookeeper-nodes" group
+in the inventory file by default. All servers are added to the zoo.cfg file along with the leader and election ports.
+
 ## Requirements
 
 Platform: RHEL / CentOS 7
@@ -23,8 +26,38 @@ The Oracle Java 8 JDK role from Ansible Galaxy can be used if one is needed.
     zookeeper_install_dir: '{{ zookeeper_root_dir}}/zookeeper-{{zookeeper_version}}'
     zookeeper_dir: '{{ zookeeper_root_dir }}/zookeeper'
     zookeeper_log_dir: /var/log/zookeeper
-    zookeeper_snapshot_dir: /var/lib/zookeeper/data
+    zookeeper_data_dir: /var/lib/zookeeper
+    zookeeper_data_log_dir: /var/lib/zookeeper
     zookeeper_client_port: 2181
+    zookeeper_id: 1
+    zookeeper_leader_port: 2888
+    zookeeper_election_port: 3888
+
+
+### Default Ports
+
+| Port | Description |
+|------|-------------|
+| 2181 | Client connection port |
+| 2888 | Quorum port for clustering |
+| 3888 | Leader election port for clustering |
+
+
+### Default Directories and Files
+
+| Directory / File | |
+|-----|----|
+| Installation directory | `/usr/share/zookeeper-<version>`
+| Symlink to install directory | `/usr/share/zookeeper` |
+| Symlink to configuration | `/etc/zookeeper/zoo.cfg` |
+| Log files | `/var/log/zookeeper` |
+| Data directory for snapshots and myid file | `/var/lib/zookeeper` |
+| Data directory for transaction log files | `/var/lib/zookeeper` |
+| Systemd service | `/usr/lib/systemd/system/zookeeper.service` |
+
+## Starting and Stopping ZooKeeper services
+* The ZooKeeper service can be started via: `systemctl start zookeeper`
+* The ZooKeeper service can be stopped via: `systemctl stop zookeeper`
 
 ## Dependencies
 

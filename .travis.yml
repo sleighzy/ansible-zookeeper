@@ -6,32 +6,70 @@ services:
   - docker
 
 before_install:
-  # Pull a CentOS image with systemd installed
-  - docker pull centos/systemd
+  # Update the host with latest versions
+  - sudo apt-get update -qq
 
 install:
-  # Run the container in detached mode. The usage of privileged, mounting cgroup volumes and /usr/lib/systemd/systemd are required so that systemd can be
-  # used without the "Failed to get D-Bus connection: Operation not permitted" error occurring when running commands, e.g. systemctl daemon-reload
-  - docker run --privileged --detach --volume="${PWD}":/etc/ansible/roles/ansible-zookeeper:ro --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --name zookeeper centos/systemd /usr/lib/systemd/systemd
-  # Install the EPEL packages
-  - docker exec zookeeper yum -y install epel-release
-  # Install the Ansible packages
-  - docker exec zookeeper yum -y install ansible
+  # Install Ansible on host
+  - pip install ansible
+
+  # Add ansible.cfg to pick up roles path.
+  - "printf '[defaults]\nroles_path = ../' > ansible.cfg"
+
+  # Pull a CentOS image with systemd installed for the Docker containers
+  - docker pull centos/systemd
 
 script:
   # Install role dependencies.
-  - docker exec zookeeper ansible-galaxy install -r /etc/ansible/roles/ansible-zookeeper/tests/requirements.yml
+  - ansible-galaxy install -r tests/requirements.yml
+
   # Check syntax of Ansible role
-  - docker exec zookeeper ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --syntax-check
+  - ansible-playbook tests/test.yaml -i tests/inventory --syntax-check
+
   # Run Ansible role
-  - docker exec zookeeper ansible-playbook /etc/ansible/roles/ansible-zookeeper/tests/test.yaml --verbose
+  - ansible-playbook tests/test.yaml -i tests/inventory --verbose
+
+  # Run the playbook and role again to ensure that it is idempotent and nothing has changed
+  - >
+    ansible-playbook tests/test.yaml -i tests/inventory --verbose
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+
   # Check that the ZooKeeper service is running
-  - docker exec zookeeper systemctl status zookeeper 2>&1 | awk 'FNR == 3 {print}' | grep "active (running)" && (echo "Service running - pass" && exit 0) || (echo "Service running - fail" && exit 1)
+  - >
+    docker exec zookeeper-1 systemctl status zookeeper 2>&1
+    | awk 'FNR == 3 {print}' | grep "active (running)"
+    && (echo "Service running - pass" && exit 0)
+    || (echo "Service running - fail" && exit 1)
+
   # Check that a Znode can be successfully created
-  - docker exec zookeeper /usr/share/zookeeper/bin/zkCli.sh create /TestZnode1 "test-node-1" 2>&1 | awk -F\" '/Created/ {print $1}' | grep "Created" && (echo "Znode ceate test - pass" && exit 0) || (echo "Znode create test - fail" && exit 1)
+  - >
+    docker exec zookeeper-1 /usr/share/zookeeper/bin/zkCli.sh create /TestZnode1 "test-node-1" 2>&1
+    | awk -F\" '/Created/ {print $1}' | grep "Created"
+    && (echo "Znode ceate test - pass" && exit 0)
+    || (echo "Znode create test - fail" && exit 1)
+
+  # Check that the Znode is available on all nodes in the cluster
+  - >
+    docker exec zookeeper-2 /usr/share/zookeeper/bin/zkCli.sh ls /TestZnode1 2>&1
+    | awk 'END{print}' | grep 'Node does not exist'
+    && (echo "Znode cluster ceate test - fail" && exit 1)
+    || (echo "Znode cluster create test - pass" && exit 0)
+  - >
+    docker exec zookeeper-3 /usr/share/zookeeper/bin/zkCli.sh ls /TestZnode1 2>&1
+    | awk 'END{print}' | grep 'Node does not exist'
+    && (echo "Znode cluster ceate test - fail" && exit 1)
+    || (echo "Znode cluster create test - pass" && exit 0)
 
 after_script:
-  - docker stop zookeeper && docker rm zookeeper
+  # Stop and remove the Docker containers
+  - docker stop zookeeper-1 && docker rm zookeeper-1
+  - docker stop zookeeper-2 && docker rm zookeeper-2
+  - docker stop zookeeper-3 && docker rm zookeeper-3
+
+  # Remove the Docker network
+  - docker network rm zookeeper
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

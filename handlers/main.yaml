@@ -1,5 +1,8 @@
 ---
 
+- name: Reload systemd
+  command: systemctl daemon-reload
+  
 - name: Restart ZooKeeper service
   service:
     name: zookeeper.service

@@ -1,3 +1,5 @@
+# {{ ansible_managed }}
+
 # The number of milliseconds of each tick
 tickTime=2000
 
@@ -12,7 +14,11 @@ syncLimit=5
 # the directory where the snapshot is stored.
 # do not use /tmp for storage, /tmp here is just
 # example sakes.
-dataDir={{ zookeeper_snapshot_dir }}
+dataDir={{ zookeeper_data_dir }}
+
+# Directory to write the transaction log to the dataLogDir rather than the dataDir.
+# This allows a dedicated log device to be used, and helps avoid competition between logging and snaphots.
+dataLogDir={{ zookeeper_data_log_dir }}
 
 # the port at which the clients will connect
 clientPort={{ zookeeper_client_port }}
@@ -40,3 +46,7 @@ clientPort={{ zookeeper_client_port }}
 # a single unique number, e.g. 1, 2, etc.
 #server.1=hostname1:2888:3888
 #server.2=hostname2:2888:3888
+
+{% for host in groups['zookeeper-nodes'] %}
+server.{{ hostvars[host].zookeeper_id }}={{ hostvars[host]['ansible_host'] }}:{{ zookeeper_leader_port }}:{{ zookeeper_election_port }}
+{% endfor %}
