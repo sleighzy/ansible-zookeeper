@@ -2,6 +2,8 @@
 
 - hosts: localhost
 
+  tasks:
+    
   # Create a Docker network that the containers will connect to. This will enable the
   # containers to be able to see and access each other.
   # This requires Ansible 2.2 for this docker_network module.
