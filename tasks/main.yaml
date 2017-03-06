@@ -59,6 +59,15 @@
   tags:
     - zookeeper_dirs
 
+- name: Create directory for transaction log files
+  file:
+    path: '{{ zookeeper_data_log_dir }}'
+    state: directory
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
+  tags:
+    - zookeeper_dirs
+
 - name: Create zookeeper log directory
   file:
     path: '{{ zookeeper_log_dir }}'
