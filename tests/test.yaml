@@ -1,23 +1,6 @@
 ---
 
 - hosts: localhost
-  # Set the python interpreter to use as we need to run commands from
-  # the python virtualenv (/tmp/ansible-env) created below.
-  # If this is not done then the host's python interpreter is used and
-  # we will be using different versions of python packages than we require.
-  vars:
-    ansible_python_interpreter: /tmp/ansible-env/bin/python
-
-  tasks:
-
-  # Install docker-py required for the docker_network and docker_container modules.
-  # This installs this in a virtualenv as the required version must be at minimum 1.7
-  # and due to a version matching bug 1.10 and above are evaluated as being less than 1.7.
-  - name: Install docker-py
-    pip:
-      name: docker-py
-      version: 1.9.0
-      virtualenv: /tmp/ansible-env
 
   # Create a Docker network that the containers will connect to. This will enable the
   # containers to be able to see and access each other.
