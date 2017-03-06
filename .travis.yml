@@ -14,7 +14,7 @@ install:
   - pip install ansible
 
   # Add ansible.cfg to pick up roles path.
-  - "printf '[defaults]\nroles_path = ../' > ansible.cfg"
+  - printf '[defaults]\nroles_path = ../' > ansible.cfg
 
   # Pull a CentOS image with systemd installed for the Docker containers
   - docker pull centos/systemd
