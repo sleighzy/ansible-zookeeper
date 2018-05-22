@@ -1,6 +1,6 @@
 ---
 
-zookeeper_version: 3.4.8
+zookeeper_version: 3.4.12
 
 zookeeper_group: zookeeper
 zookeeper_user: zookeeper
