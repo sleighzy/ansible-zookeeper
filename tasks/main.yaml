@@ -1,5 +1,4 @@
 ---
-
 - name: Create zookeeper group
   group:
     name: '{{ zookeeper_group }}'
@@ -23,7 +22,7 @@
 
 - name: Download Apache ZooKeeper
   get_url:
-    url: http://www-eu.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz
+    url: "{{zookeeper_mirror}}/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz"
     dest: /tmp
   when: dir.stat.exists == False
   tags:

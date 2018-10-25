@@ -19,7 +19,7 @@ The Oracle Java 8 JDK role from Ansible Galaxy can be used if one is needed.
 
 ## Role Variables
 
-    zookeeper_version: 3.4.8
+    zookeeper_version: 3.4.13
     zookeeper_group: zookeeper
     zookeeper_user: zookeeper
     zookeeper_root_dir: /usr/share
@@ -32,6 +32,8 @@ The Oracle Java 8 JDK role from Ansible Galaxy can be used if one is needed.
     zookeeper_id: 1
     zookeeper_leader_port: 2888
     zookeeper_election_port: 3888
+    zookeeper_mirror: "http://www-eu.apache.org/dist/zookeeper"
+    zookeeper_servers: "{{groups['zookeeper-nodes']}}"
 
 
 ### Default Ports
