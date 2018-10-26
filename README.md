@@ -11,7 +11,7 @@ in the inventory file by default. All servers are added to the zoo.cfg file alon
 
 Platform: RHEL / CentOS 7
 
-Java: Oracle JDK
+Java: Java 8
 
 The Oracle Java 8 JDK role from Ansible Galaxy can be used if one is needed.
 

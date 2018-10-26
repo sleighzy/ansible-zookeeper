@@ -46,6 +46,12 @@
 
 # Install Java and ZooKeeper on all nodes.
 - hosts: zookeeper-nodes
+  
+  tasks:
+  - name: Install Java 8 (OpenJDK)
+    yum:
+      name: java-1.8.0-openjdk
+      state: latest
+
   roles:
-    - java
     - ansible-zookeeper
