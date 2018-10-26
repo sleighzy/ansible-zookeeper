@@ -23,8 +23,6 @@ install:
   - docker pull centos/systemd
 
 script:
-  # Install role dependencies.
-  - ansible-galaxy install -r tests/requirements.yml
 
   # Check syntax of Ansible role
   - ansible-playbook tests/test.yaml -i tests/inventory --syntax-check
