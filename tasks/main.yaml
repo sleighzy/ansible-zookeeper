@@ -114,6 +114,15 @@
   tags:
     - zookeeper_config
 
+- name: Template /etc/default
+  template:
+    src: default.j2
+    dest: '/etc/default/zookeeper'
+  notify:
+    - Restart ZooKeeper service
+  tags:
+    - zookeeper_config
+
 # Uncomment the log4j.properties line for setting the maximum number of logs to rollover and keep
 - name: Set maximum log rollover history
   replace:
