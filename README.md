@@ -34,6 +34,8 @@ The Oracle Java 8 JDK role from Ansible Galaxy can be used if one is needed.
     zookeeper_election_port: 3888
     zookeeper_mirror: "http://www-eu.apache.org/dist/zookeeper"
     zookeeper_servers: "{{groups['zookeeper-nodes']}}"
+    zookeeper_environment:
+        "JVMFLAGS": "-javaagent:/opt/jolokia/jolokia-jvm-1.6.0-agent.jar"
 
 
 ### Default Ports
