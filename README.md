@@ -49,15 +49,16 @@ The Oracle Java 8 JDK role from Ansible Galaxy can be used if one is needed.
 
 ### Default Directories and Files
 
-| Directory / File | |
-|-----|----|
-| Installation directory | `/usr/share/zookeeper-<version>`
-| Symlink to install directory | `/usr/share/zookeeper` |
-| Symlink to configuration | `/etc/zookeeper/zoo.cfg` |
-| Log files | `/var/log/zookeeper` |
-| Data directory for snapshots and myid file | `/var/lib/zookeeper` |
-| Data directory for transaction log files | `/var/lib/zookeeper` |
-| Systemd service | `/usr/lib/systemd/system/zookeeper.service` |
+ Description                               | Directory / File 
+-------------------------------------------|------------------
+Installation directory                     | `/usr/share/zookeeper-<version>`
+Symlink to install directory               | `/usr/share/zookeeper` 
+Symlink to configuration                   | `/etc/zookeeper/zoo.cfg` 
+Log files                                  | `/var/log/zookeeper` 
+Data directory for snapshots and myid file | `/var/lib/zookeeper` 
+Data directory for transaction log files   | `/var/lib/zookeeper` 
+Systemd service                            | `/usr/lib/systemd/system/zookeeper.service` 
+System Defaults                            | `/etc/default/zookeeper` 
 
 ## Starting and Stopping ZooKeeper services
 * The ZooKeeper service can be started via: `systemctl start zookeeper`
