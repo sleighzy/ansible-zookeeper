@@ -1,0 +1,6 @@
+ZOO_LOG_DIR={{ zookeeper_log_dir }}
+ZOO_LOG4J_PROP=INFO,ROLLINGFILE
+
+{% for key, value in zookeeper_environment.items() %}
+{{key}}={{value}}
+{% endfor %}
