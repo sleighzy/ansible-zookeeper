@@ -139,7 +139,6 @@
     src: zookeeper.service.j2
     dest: /usr/lib/systemd/system/zookeeper.service
   notify:
-    - Reload systemd
     - Restart ZooKeeper service
   tags:
     - zookeeper_service

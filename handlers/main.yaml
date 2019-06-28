@@ -1,6 +1,6 @@
 ---
 
-- name: Restart ZooKeeper service and daemon-reload to pick up config changes
+- name: Restart ZooKeeper service
   systemd:
     name: zookeeper.service
     state: restarted
