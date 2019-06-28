@@ -22,9 +22,9 @@
 
 - name: Download Apache ZooKeeper
   get_url:
-    url: "{{zookeeper_mirror}}/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz"
+    url: "{{ zookeeper_mirror }}/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz"
     dest: /tmp
-  when: dir.stat.exists == False
+  when: not dir.stat.exists
   tags:
     - zookeeper_download
 
@@ -35,7 +35,7 @@
     copy: no
     group: '{{ zookeeper_group }}'
     owner: '{{ zookeeper_user }}'
-  when: dir.stat.exists == False
+  when: not dir.stat.exists
   tags:
     - zookeeper_unpack
 
@@ -97,7 +97,7 @@
 
 - name: Create symlink to ZooKeeper configuration file
   file:
-    src: '{{ zookeeper_dir}}/conf/zoo.cfg'
+    src: '{{ zookeeper_dir }}/conf/zoo.cfg'
     dest: /etc/zookeeper/zoo.cfg
     state: link
     group: '{{ zookeeper_group }}'
@@ -105,7 +105,7 @@
   tags:
     - zookeeper_config
 
-- name: Template myid to {{ zookeeper_data_dir}}/myid
+- name: Template myid to {{ zookeeper_data_dir }}/myid
   template:
     src: myid.j2
     dest: '{{ zookeeper_data_dir }}/myid'
