@@ -6,7 +6,7 @@ zookeeper_group: zookeeper
 zookeeper_user: zookeeper
 
 zookeeper_root_dir: /usr/share
-zookeeper_install_dir: '{{ zookeeper_root_dir }}/zookeeper-{{ zookeeper_version }}'
+zookeeper_install_dir: '{{ zookeeper_root_dir }}/apache-zookeeper-{{ zookeeper_version }}'
 # The zookeeper_dir is created as a symlik to the actual installation directory.
 # All other configuration and variables use the symlinked directory.
 zookeeper_dir: '{{ zookeeper_root_dir }}/zookeeper'

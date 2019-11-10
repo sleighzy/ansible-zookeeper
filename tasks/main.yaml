@@ -17,7 +17,7 @@
 
 - name: Check if ZooKeeper has already been downloaded and unpacked
   stat:
-    path: '{{ zookeeper_root_dir }}/zookeeper-{{ zookeeper_version }}'
+    path: '{{ zookeeper_root_dir }}/apache-zookeeper-{{ zookeeper_version }}'
   register: dir
 
 - name: Download Apache ZooKeeper
@@ -154,7 +154,7 @@
 # Cleanup install by deleting downloaded ZooKeeper archive
 - name: Delete ZooKeeper tar.gz file
   file:
-    path: /tmp/zookeeper-{{ zookeeper_version }}.tar.gz
+    path: /tmp/apache-zookeeper-{{ zookeeper_version }}.tar.gz
     state: absent
   tags:
     - zookeeper_cleanup
