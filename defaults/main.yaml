@@ -1,6 +1,6 @@
 ---
-zookeeper_mirror: "https://www-eu.apache.org/dist/zookeeper"
-zookeeper_version: 3.4.14
+zookeeper_mirror: 'https://www-eu.apache.org/dist/zookeeper'
+zookeeper_version: 3.5.6
 
 zookeeper_group: zookeeper
 zookeeper_user: zookeeper

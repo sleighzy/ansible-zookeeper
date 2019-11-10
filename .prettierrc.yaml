@@ -1,1 +1,8 @@
-proseWrap: "always"
+proseWrap: 'always'
+singleQuote: true
+overrides:
+  - files:
+      - '*.yml'
+      - '*.yaml'
+    options:
+      proseWrap: 'never'

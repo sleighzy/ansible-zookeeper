@@ -7,7 +7,7 @@ galaxy_info:
   platforms:
     - name: EL
       versions:
-      - all
+        - all
   galaxy_tags:
     - zookeeper
     - clustering

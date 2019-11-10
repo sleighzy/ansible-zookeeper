@@ -22,7 +22,7 @@
 
 - name: Download Apache ZooKeeper
   get_url:
-    url: "{{ zookeeper_mirror }}/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz"
+    url: '{{ zookeeper_mirror }}/zookeeper-{{ zookeeper_version }}/apache-zookeeper-{{ zookeeper_version }}.tar.gz'
     dest: /tmp
   when: not dir.stat.exists
   tags:
@@ -30,7 +30,7 @@
 
 - name: Unpack Apache ZooKeeper
   unarchive:
-    src: /tmp/zookeeper-{{ zookeeper_version }}.tar.gz
+    src: /tmp/apache-zookeeper-{{ zookeeper_version }}.tar.gz
     dest: '{{ zookeeper_root_dir }}'
     copy: no
     group: '{{ zookeeper_group }}'
