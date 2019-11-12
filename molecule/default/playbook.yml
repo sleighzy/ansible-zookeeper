@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  pre_tasks:
+    - name: Install Java 8 (OpenJDK)
+      yum:
+        name: java-1.8.0-openjdk
+        state: installed
+  roles:
+    - role: ansible-zookeeper

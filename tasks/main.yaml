@@ -17,22 +17,33 @@
 
 - name: Check if ZooKeeper has already been downloaded and unpacked
   stat:
-    path: '{{ zookeeper_root_dir }}/zookeeper-{{ zookeeper_version }}'
+    path: '{{ zookeeper_install_dir }}'
   register: dir
 
 - name: Download Apache ZooKeeper
   get_url:
-    url: "{{ zookeeper_mirror }}/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz"
+    url: '{{ zookeeper_mirror }}/zookeeper-{{ zookeeper_version }}/{{ zookeeper_package }}'
     dest: /tmp
   when: not dir.stat.exists
   tags:
     - zookeeper_download
 
+- name: Create ZooKeeper installation dir {{ zookeeper_install_dir }}
+  file:
+    path: '{{ zookeeper_install_dir }}'
+    state: directory
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
+  when: not dir.stat.exists
+  tags:
+    - zookeeper_dirs
+
 - name: Unpack Apache ZooKeeper
   unarchive:
-    src: /tmp/zookeeper-{{ zookeeper_version }}.tar.gz
-    dest: '{{ zookeeper_root_dir }}'
+    src: /tmp/{{ zookeeper_package }}
+    dest: '{{ zookeeper_install_dir }}'
     copy: no
+    extra_opts: [--strip-components=1]
     group: '{{ zookeeper_group }}'
     owner: '{{ zookeeper_user }}'
   when: not dir.stat.exists
@@ -144,7 +155,7 @@
     - zookeeper_service
 
 - name: Start the ZooKeeper service
-  service:
+  systemd:
     name: zookeeper.service
     state: started
     enabled: yes
@@ -152,9 +163,9 @@
     - zookeeper_service
 
 # Cleanup install by deleting downloaded ZooKeeper archive
-- name: Delete ZooKeeper tar.gz file
+- name: Delete /tmp/{{ zookeeper_package }} file
   file:
-    path: /tmp/zookeeper-{{ zookeeper_version }}.tar.gz
+    path: /tmp/{{ zookeeper_package }}
     state: absent
   tags:
     - zookeeper_cleanup

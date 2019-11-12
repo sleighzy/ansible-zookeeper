@@ -15,17 +15,15 @@ Platform: RHEL / CentOS 7
 
 Java: Java 8
 
-The Oracle Java 8 JDK role from Ansible Galaxy can be used if one is needed.
-
-`$ ansible-galaxy install sleighzy.java-8`
-
 ## Role Variables
 
-    zookeeper_version: 3.4.14
+    zookeeper_mirror: http://www-eu.apache.org/dist/zookeeper
+    zookeeper_version: 3.5.6
+    zookeeper_package: apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz
     zookeeper_group: zookeeper
     zookeeper_user: zookeeper
     zookeeper_root_dir: /usr/share
-    zookeeper_install_dir: '{{ zookeeper_root_dir}}/zookeeper-{{zookeeper_version}}'
+    zookeeper_install_dir: '{{ zookeeper_root_dir}}/apache-zookeeper-{{zookeeper_version}}'
     zookeeper_dir: '{{ zookeeper_root_dir }}/zookeeper'
     zookeeper_log_dir: /var/log/zookeeper
     zookeeper_data_dir: /var/lib/zookeeper
@@ -34,7 +32,6 @@ The Oracle Java 8 JDK role from Ansible Galaxy can be used if one is needed.
     zookeeper_id: 1
     zookeeper_leader_port: 2888
     zookeeper_election_port: 3888
-    zookeeper_mirror: "http://www-eu.apache.org/dist/zookeeper"
     zookeeper_servers: "{{groups['zookeeper-nodes']}}"
     zookeeper_environment:
         "JVMFLAGS": "-javaagent:/opt/jolokia/jolokia-jvm-1.6.0-agent.jar"
@@ -51,7 +48,7 @@ The Oracle Java 8 JDK role from Ansible Galaxy can be used if one is needed.
 
 | Description                                | Directory / File                            |
 | ------------------------------------------ | ------------------------------------------- |
-| Installation directory                     | `/usr/share/zookeeper-<version>`            |
+| Installation directory                     | `/usr/share/apache-zookeeper-<version>`     |
 | Symlink to install directory               | `/usr/share/zookeeper`                      |
 | Symlink to configuration                   | `/etc/zookeeper/zoo.cfg`                    |
 | Log files                                  | `/var/log/zookeeper`                        |
@@ -71,9 +68,46 @@ No dependencies
 
 ## Example Playbook
 
-    - hosts: servers
+    - hosts: zookeeper-nodes
       roles:
          - sleighzy.zookeeper
+
+## Linting
+
+Linting should be done using
+[ansible-lint](https://docs.ansible.com/ansible-lint/)
+
+    pip3 install ansible-lint --user
+
+## Testing
+
+This module uses [Molecule](https://molecule.readthedocs.io/en/stable/) as a
+testing framework.
+
+As per the
+[Molecule Installation guide](https://molecule.readthedocs.io/en/stable/installation.html)
+this should be done using a virtual environment. The commands below will create
+a Python virtual environment and install Molecule including the Docker driver.
+
+    virtualenv . && \
+        source ./bin/activate && \
+        pip install 'molecule[docker]' && \
+        molecule create
+
+Run playbook and tests. Linting errors need to be corrected before Molecule will
+execute any tests.
+
+    molecule test
+
+The below command can be used to run the playbook without the tests. This can be
+run multiple times when making changes to the role, and ensuring that operations
+are idempotent.
+
+    molecule converge
+
+Tear down Molecule tests and Docker container.
+
+    molecule destroy
 
 ## License
 

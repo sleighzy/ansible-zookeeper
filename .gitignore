@@ -1,2 +1,10 @@
 # General file ignores
 .DS_Store
+
+# Python files for Molecule testing
+.Python
+bin/
+include/
+lib/
+molecule/default/tests/__pycache__
+share/
