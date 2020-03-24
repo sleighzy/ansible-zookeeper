@@ -3,11 +3,6 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint:
-  name: yamllint
-  options:
-    config-data:
-      ignore: '**/lib/'
 platforms:
   - name: zookeeper-1
     image: centos:7
@@ -17,15 +12,14 @@ platforms:
       - zookeeper-nodes
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
+  lint: |
+    set -e
+    yamllint .
+    ansible-lint
+    flake8
   inventory:
     host_vars:
       zookeeper-1:
         zookeeper_id: 1
 scenario:
   name: default
-verifier:
-  name: testinfra
-  lint:
-    name: flake8
