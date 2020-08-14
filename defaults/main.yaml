@@ -18,6 +18,8 @@ zookeeper_data_dir: /var/lib/zookeeper
 zookeeper_data_log_dir: /var/lib/zookeeper
 zookeeper_client_port: 2181
 
+zookeeper_systemd_dir: /etc/systemd/system
+
 # Uniquely identifies the ZooKeeper instance when clustering ZooKeeper nodes.
 # This value is placed in the /var/lib/zookeeper/myid file.
 zookeeper_id: 1
