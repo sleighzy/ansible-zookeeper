@@ -149,7 +149,7 @@
 - name: Template ZooKeeper systemd service file
   template:
     src: zookeeper.service.j2
-    dest: {{ zookeeper_systemd_dir }}/zookeeper.service
+    dest: '{{ zookeeper_systemd_dir }}/zookeeper.service'
   notify:
     - Restart ZooKeeper service
   tags:
