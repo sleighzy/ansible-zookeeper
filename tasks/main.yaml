@@ -62,6 +62,7 @@
 
 - name: Create directory for snapshot files and myid file
   file:
+    mode: 666
     path: '{{ zookeeper_data_dir }}'
     state: directory
     group: '{{ zookeeper_group }}'
