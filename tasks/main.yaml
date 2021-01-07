@@ -4,7 +4,7 @@
     name: '{{ zookeeper_group }}'
     state: present
   tags:
-    - zookeeper_user
+    - zookeeper_group
 
 - name: Create zookeeper user
   user:
@@ -13,7 +13,7 @@
     state: present
     createhome: no
   tags:
-    - zookeeper_group
+    - zookeeper_user
 
 - name: Check if ZooKeeper has already been downloaded and unpacked
   stat:
