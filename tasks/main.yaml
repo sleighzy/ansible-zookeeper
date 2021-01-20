@@ -3,6 +3,7 @@
   group:
     name: '{{ zookeeper_group }}'
     state: present
+  when: zookeeper_create_user_group|bool == true
   tags:
     - zookeeper_group
 
@@ -12,6 +13,7 @@
     group: '{{ zookeeper_group }}'
     state: present
     createhome: no
+  when: zookeeper_create_user_group|bool == true
   tags:
     - zookeeper_user
 
@@ -54,6 +56,32 @@
   file:
     src: '{{ zookeeper_install_dir }}'
     dest: '{{ zookeeper_dir }}'
+    state: link
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
+  tags:
+    - zookeeper_dirs
+
+- name: Remove directory of ZooKeeper application logs
+  file:
+    path: '{{ zookeeper_install_dir }}/logs'
+    state: absent
+  tags:
+    - zookeeper_dirs
+
+- name: Create directory for ZooKeeper application logs
+  file:
+    path: '{{ zookeeper_log_dir }}'
+    state: directory
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
+  tags:
+    - zookeeper_dirs
+
+- name: Create symlink to ZooKeeper application logs
+  file:
+    src: '{{ zookeeper_log_dir }}'
+    dest: '{{ zookeeper_install_dir }}/logs'
     state: link
     group: '{{ zookeeper_group }}'
     owner: '{{ zookeeper_user }}'
@@ -120,6 +148,8 @@
   template:
     src: myid.j2
     dest: '{{ zookeeper_data_dir }}/myid'
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
   notify:
     - Restart ZooKeeper service
   tags:

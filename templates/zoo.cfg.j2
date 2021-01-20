@@ -47,6 +47,6 @@ clientPort={{ zookeeper_client_port }}
 #server.1=hostname1:2888:3888
 #server.2=hostname2:2888:3888
 
-{% for host in zookeeper_servers %}
-server.{{ hostvars[host].zookeeper_id | default(zookeeper_id) }}={{ hostvars[host]['ansible_nodename'] }}:{{ zookeeper_leader_port }}:{{ zookeeper_election_port }}
+{% for host in groups[zookeeper_servers] %}
+server.{{ hostvars[host].zookeeper_id | default(zookeeper_id) }}={{ hostvars[host].ansible_nodename }}:{{ zookeeper_leader_port }}:{{ zookeeper_election_port }}
 {% endfor %}
