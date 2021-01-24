@@ -36,6 +36,7 @@
     state: directory
     group: '{{ zookeeper_group }}'
     owner: '{{ zookeeper_user }}'
+    mode: 0755
   when: not dir.stat.exists
   tags:
     - zookeeper_dirs
@@ -68,6 +69,7 @@
     state: directory
     group: '{{ zookeeper_group }}'
     owner: '{{ zookeeper_user }}'
+    mode: 0755
   tags:
     - zookeeper_dirs
 
@@ -77,6 +79,7 @@
     state: directory
     group: '{{ zookeeper_group }}'
     owner: '{{ zookeeper_user }}'
+    mode: 0755
   tags:
     - zookeeper_dirs
 
@@ -86,6 +89,7 @@
     state: directory
     group: '{{ zookeeper_group }}'
     owner: '{{ zookeeper_user }}'
+    mode: 0755
   tags:
     - zookeeper_dirs
 
@@ -94,6 +98,9 @@
   template:
     src: zoo.cfg.j2
     dest: '{{ zookeeper_dir }}/conf/zoo.cfg'
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
+    mode: 0644
   notify:
     - Restart ZooKeeper service
   tags:
@@ -105,6 +112,7 @@
     state: directory
     group: '{{ zookeeper_group }}'
     owner: '{{ zookeeper_user }}'
+    mode: 0755
   tags:
     - zookeeper_config
 
@@ -124,6 +132,7 @@
     dest: '{{ zookeeper_data_dir }}/myid'
     group: '{{ zookeeper_group }}'
     owner: '{{ zookeeper_user }}'
+    mode: 0644
   notify:
     - Restart ZooKeeper service
   tags:
@@ -133,6 +142,9 @@
   template:
     src: default.j2
     dest: '/etc/default/zookeeper'
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
+    mode: 0644
   notify:
     - Restart ZooKeeper service
   tags:
@@ -153,6 +165,9 @@
   template:
     src: zookeeper.service.j2
     dest: /usr/lib/systemd/system/zookeeper.service
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
+    mode: 0644
   notify:
     - Restart ZooKeeper service
   tags:
