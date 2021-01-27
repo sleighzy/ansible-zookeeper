@@ -158,16 +158,27 @@
   template:
     src: zookeeper.service.j2
     dest: "{{ zookeeper_unit_path }}"
-  notify:
-    - Restart ZooKeeper service
+  tags:
+    - zookeeper_service
+
+- name: Populate service facts
+  ansible.builtin.service_facts:
+  tags:
+    - zookeeper_service
+
+- name: Debug service state
+  debug:
+    msg:
+      "Zookeeper service state": "{{ ansible_facts.services['zookeeper.service'].state }}"
   tags:
     - zookeeper_service
 
 - name: Start the ZooKeeper service
   systemd:
     name: zookeeper.service
-    state: "{{ zookeeper_start | ternary('started', 'stopped') }}"
+    state: started
     enabled: yes
+  when: zookeeper_start and ansible_facts.services['zookeeper.service'].state in ['stopped', 'inactive']
   tags:
     - zookeeper_service
 
