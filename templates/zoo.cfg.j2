@@ -47,3 +47,19 @@ zookeeper_purge_interval={{ zookeeper_purge_interval }}
 {% for host in zookeeper_servers %}
 server.{{ hostvars[host].zookeeper_id }}={{ hostvars[host].ansible_hostname }}:{{ zookeeper_leader_port }}:{{ zookeeper_election_port }}
 {% endfor %}
+
+{% if zookeeper_version is version('3.5', '>=') %}
+# AdminServer
+admin.enableServer={{ zookeeper_enable_server | ternary('true', 'false') }}
+admin.serverAddress={{ zookeeper_server_address }}
+admin.serverPort={{ zookeeper_server_port }}
+admin.idleTimeout={{ zookeeper_idle_timeout }}
+admin.commandURL={{ zookeeper_command_url }}
+{% endif %}
+
+{% if zookeeper_version is version('3.6', '>=') %}
+# Metrics Providers
+metricsProvider.className={{ zookeeper_metricsprovider_classname }}
+metricsProvider.httpPort={{ zookeeper_metricsprovider_httpport }}
+metricsProvider.exportJvmInfo={{ zookeeper_metricsprovider_exportjvminfo | ternary('true', 'false') }}
+{% endif %}

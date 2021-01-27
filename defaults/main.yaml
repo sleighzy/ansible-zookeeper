@@ -15,8 +15,10 @@ zookeeper_install_dir: '{{ zookeeper_root_dir }}/apache-zookeeper-{{ zookeeper_v
 zookeeper_dir: '{{ zookeeper_root_dir }}/zookeeper'
 zookeeper_log_dir: /var/log/zookeeper
 
-# Start zookeeper after install
+# Start zookeeper after installation
 zookeeper_start: yes
+# Restart zookeeper on configuration change
+zookeeper_restart: yes
 
 # Configuration variables
 
@@ -61,3 +63,21 @@ zookeeper_leader_port: 2888
 zookeeper_election_port: 3888
 zookeeper_servers: "{{ groups['zookeeper-nodes'] }}"
 zookeeper_environment: {}
+
+# Set to "false" to disable the AdminServer. By default the AdminServer is enabled.
+zookeeper_enable_server: yes
+# The address the embedded Jetty server listens on. Defaults to 0.0.0.0.
+zookeeper_server_address: 0.0.0.0
+# The port the embedded Jetty server listens on. Defaults to 8080.
+zookeeper_server_port: 8080 
+# Set the maximum idle time in milliseconds that a connection can wait before sending or receiving data. Defaults to 30000 ms.
+zookeeper_idle_timeout: 30000
+# The URL for listing and issuing commands relative to the root URL. Defaults to "/commands".
+zookeeper_command_url: /commands
+
+# Set to "org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider" to enable Prometheus.io exporter.
+zookeeper_metricsprovider_classname: org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider
+#  Prometheus.io exporter will start a Jetty server and bind to this port, it default to 7000. Prometheus end point will be http://hostname:httPort/metrics.
+zookeeper_metricsprovider_httpport: 7000
+# If this property is set to true Prometheus.io will export useful metrics about the JVM. The default is true.
+zookeeper_metricsprovider_exportjvminfo: yes
