@@ -1,15 +1,15 @@
 # {{ ansible_managed }}
 
 # The number of milliseconds of each tick
-tickTime=2000
+tickTime={{ zookeeper_ticktime }}
 
 # The number of ticks that the initial
 # synchronization phase can take
-initLimit=10
+initLimit={{ zookeeper_init_limit }}
 
 # The number of ticks that can pass between
 # sending a request and getting an acknowledgement
-syncLimit=5
+syncLimit={{ zookeeper_sync_limit }}
 
 # the directory where the snapshot is stored.
 # do not use /tmp for storage, /tmp here is just
@@ -25,7 +25,7 @@ clientPort={{ zookeeper_client_port }}
 
 # the maximum number of client connections.
 # increase this if you need to handle more clients
-#maxClientCnxns=60
+zookeeper_max_client_cnxns={{ zookeeper_max_client_cnxns }}
 
 #
 # Be sure to read the maintenance section of the
@@ -34,19 +34,16 @@ clientPort={{ zookeeper_client_port }}
 # http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance
 #
 # The number of snapshots to retain in dataDir
-#autopurge.snapRetainCount=3
+zookeeper_autopurge_snap_retain_count={{ zookeeper_autopurge_snap_retain_count }}
 # Purge task interval in hours
 # Set to "0" to disable auto purge feature
-#autopurge.purgeInterval=1
+zookeeper_purge_interval={{ zookeeper_purge_interval }}
 
 # List of clustered ZooKeeper nodes.
 # Port 2888 is the default quorum port and 3888 is the default
 # leader election port. These must be unique per server.
 # Each server also needs a /var/lib/zookeeper/myid file created containing
 # a single unique number, e.g. 1, 2, etc.
-#server.1=hostname1:2888:3888
-#server.2=hostname2:2888:3888
-
 {% for host in zookeeper_servers %}
-server.{{ hostvars[host].zookeeper_id | default(zookeeper_id) }}={{ hostvars[host]['ansible_nodename'] }}:{{ zookeeper_leader_port }}:{{ zookeeper_election_port }}
+server.{{ hostvars[host].zookeeper_id }}={{ hostvars[host].ansible_hostname }}:{{ zookeeper_leader_port }}:{{ zookeeper_election_port }}
 {% endfor %}
