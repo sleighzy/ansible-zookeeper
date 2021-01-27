@@ -15,6 +15,9 @@ zookeeper_install_dir: '{{ zookeeper_root_dir }}/apache-zookeeper-{{ zookeeper_v
 zookeeper_dir: '{{ zookeeper_root_dir }}/zookeeper'
 zookeeper_log_dir: /var/log/zookeeper
 
+# Start zookeeper after install
+zookeeper_start: yes
+
 # Configuration variables
 
 # The unit of time for ZooKeeper translated to milliseconds. 

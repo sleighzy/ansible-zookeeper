@@ -166,7 +166,7 @@
 - name: Start the ZooKeeper service
   systemd:
     name: zookeeper.service
-    state: started
+    state: "{{ zookeeper_start | ternary('started', 'stopped') }}"
     enabled: yes
   tags:
     - zookeeper_service
