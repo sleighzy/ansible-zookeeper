@@ -62,32 +62,6 @@
   tags:
     - zookeeper_dirs
 
-- name: Remove directory of ZooKeeper application logs
-  file:
-    path: '{{ zookeeper_install_dir }}/logs'
-    state: absent
-  tags:
-    - zookeeper_dirs
-
-- name: Create directory for ZooKeeper application logs
-  file:
-    path: '{{ zookeeper_log_dir }}'
-    state: directory
-    group: '{{ zookeeper_group }}'
-    owner: '{{ zookeeper_user }}'
-  tags:
-    - zookeeper_dirs
-
-- name: Create symlink to ZooKeeper application logs
-  file:
-    src: '{{ zookeeper_log_dir }}'
-    dest: '{{ zookeeper_install_dir }}/logs'
-    state: link
-    group: '{{ zookeeper_group }}'
-    owner: '{{ zookeeper_user }}'
-  tags:
-    - zookeeper_dirs
-
 - name: Create directory for snapshot files and myid file
   file:
     path: '{{ zookeeper_data_dir }}'
