@@ -1,2 +1,2 @@
 ---
-zookeeper_unit_path: /etc/systemd/system/zookeeper.service
+zookeeper_unit_path: /lib/systemd/system/zookeeper.service
