@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/sleighzy/ansible-zookeeper.svg?branch=master)](https://travis-ci.org/sleighzy/ansible-zookeeper)
 
-Ansible role for installing and configuring Apache ZooKeeper on RHEL / CentOS 7.
+Ansible role for installing and configuring Apache ZooKeeper on RedHat 7 and 8.
 
 This role can be used to install and cluster multiple ZooKeeper nodes, this uses
 all hosts defined for the "zookeeper-nodes" group in the inventory file by
@@ -11,7 +11,7 @@ election ports.
 
 ## Requirements
 
-Platform: RHEL / CentOS 7
+Platform: RedHat 7 and 8
 
 Java: Java 8
 
@@ -32,7 +32,7 @@ Java: Java 8
     zookeeper_id: 1
     zookeeper_leader_port: 2888
     zookeeper_election_port: 3888
-    zookeeper_servers: "{{groups['zookeeper-nodes']}}"
+    zookeeper_servers: zookeeper-nodes
     zookeeper_environment:
         "JVMFLAGS": "-javaagent:/opt/jolokia/jolokia-jvm-1.6.0-agent.jar"
 
