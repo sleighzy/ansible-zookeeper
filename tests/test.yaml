@@ -9,7 +9,7 @@
       docker_network:
         name: zookeeper
         ipam_config:
-          subnet: '172.25.0.0/16'
+          - subnet: '172.25.0.0/16'
 
     # The centos/systemd image used to create these containers is required so
     # that systemd is available. This is used for the systemctl commands to
