@@ -5,6 +5,7 @@ zookeeper_version: 3.6.2
 zookeeper_mirror: https://www-eu.apache.org/dist/zookeeper
 zookeeper_package: apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz
 
+zookeeper_create_user_group: true
 zookeeper_group: zookeeper
 zookeeper_user: zookeeper
 

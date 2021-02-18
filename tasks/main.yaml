@@ -12,6 +12,7 @@
   group:
     name: '{{ zookeeper_group }}'
     state: present
+  when: zookeeper_create_user_group | bool
   tags:
     - zookeeper_group
 
@@ -21,6 +22,7 @@
     group: '{{ zookeeper_group }}'
     state: present
     createhome: no
+  when: zookeeper_create_user_group | bool
   tags:
     - zookeeper_user
 
@@ -129,6 +131,8 @@
   template:
     src: myid.j2
     dest: '{{ zookeeper_data_dir }}/myid'
+    group: '{{ zookeeper_group }}'
+    owner: '{{ zookeeper_user }}'
   notify:
     - Restart ZooKeeper service
   tags:
