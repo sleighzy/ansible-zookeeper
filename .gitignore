@@ -10,3 +10,4 @@ molecule/default/tests/__pycache__
 share/
 
 super-linter.log
+.vscode
