@@ -7,8 +7,11 @@
 Ansible role for installing and configuring Apache ZooKeeper
 
 Tested with :
+
 - RedHat 7 :heavy_check_mark:
+
 - RedHat 8 :heavy_check_mark:
+
 - Debian 10 :heavy_check_mark:
 
 This role can be used to install and cluster multiple ZooKeeper nodes, this uses
