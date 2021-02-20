@@ -6,13 +6,12 @@
 
 Ansible role for installing and configuring Apache ZooKeeper
 
-Tested with :
-
-- RedHat 7 :heavy_check_mark:
-
-- RedHat 8 :heavy_check_mark:
-
-- Debian 10 :heavy_check_mark:
+| Platform / Status | Supported           | Tested             |
+| ------------------|:-------------------:|:------------------:|
+| Debian 10.x       | Yes                 | Yes                |
+| Ubuntu 18.04.x    | Yes                 | No                 |
+| RedHat 7          | Yes                 | Yes                |
+| RedHat 6          | Yes                 | Yes                |
 
 This role can be used to install and cluster multiple ZooKeeper nodes, this uses
 all hosts defined for the "zookeeper-nodes" group in the inventory file by
@@ -21,9 +20,7 @@ election ports.
 
 ## Requirements
 
-Platform: RedHat 7 and 8
-
-Java: Java 8
+Java: Java 8 / 11
 
 ## Role Variables
 
