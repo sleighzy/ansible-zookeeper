@@ -197,7 +197,7 @@
     name: zookeeper.service
     state: started
     enabled: yes
-  when: zookeeper_start and ansible_facts.services['zookeeper.service'].state in ['stopped', 'inactive']
+  when: zookeeper_start and ansible_facts.services['zookeeper.service'].state in ['stopped', 'inactive', 'failed']
   tags:
     - zookeeper_service
 
