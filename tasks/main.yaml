@@ -188,7 +188,7 @@
 - name: Debug service state
   debug:
     msg:
-      "Zookeeper service state": "{{ ansible_facts.services['zookeeper.service'].state }}"
+      "ZooKeeper service state": "{{ ansible_facts.services['zookeeper.service'].state }}"
   tags:
     - zookeeper_service
 
