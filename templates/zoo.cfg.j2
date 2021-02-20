@@ -25,7 +25,7 @@ clientPort={{ zookeeper_client_port }}
 
 # the maximum number of client connections.
 # increase this if you need to handle more clients
-zookeeper_max_client_cnxns={{ zookeeper_max_client_cnxns }}
+maxCnxns={{ zookeeper_max_client_cnxns }}
 
 #
 # Be sure to read the maintenance section of the
@@ -34,10 +34,10 @@ zookeeper_max_client_cnxns={{ zookeeper_max_client_cnxns }}
 # http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance
 #
 # The number of snapshots to retain in dataDir
-zookeeper_autopurge_snap_retain_count={{ zookeeper_autopurge_snap_retain_count }}
+autopurge.snapRetainCount={{ zookeeper_autopurge_snap_retain_count }}
 # Purge task interval in hours
 # Set to "0" to disable auto purge feature
-zookeeper_purge_interval={{ zookeeper_purge_interval }}
+autopurge.purgeInterval={{ zookeeper_purge_interval }}
 
 # List of clustered ZooKeeper nodes.
 # Port 2888 is the default quorum port and 3888 is the default
