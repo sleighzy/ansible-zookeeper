@@ -180,24 +180,12 @@
   tags:
     - zookeeper_service
 
-- name: Populate service facts
-  ansible.builtin.service_facts:
-  tags:
-    - zookeeper_service
-
-- name: Debug service state
-  debug:
-    msg:
-      "ZooKeeper service state": "{{ ansible_facts.services['zookeeper.service'].state }}"
-  tags:
-    - zookeeper_service
-
 - name: Start the ZooKeeper service
   systemd:
     name: zookeeper.service
     state: started
     enabled: yes
-  when: zookeeper_start and ansible_facts.services['zookeeper.service'].state in ['stopped', 'inactive', 'failed']
+  when: zookeeper_start
   tags:
     - zookeeper_service
 
