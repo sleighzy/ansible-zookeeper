@@ -5,12 +5,12 @@
     - ../vars/{{ ansible_os_family }}.yml
     - ../vars/{{ ansible_distribution_release }}.yml
     - ../vars/empty.yml
-  tags: 
+  tags:
     - always
 
 - name: Create zookeeper group
   group:
-    name: '{{ zookeeper_group }}'
+    name: "{{ zookeeper_group }}"
     state: present
   when: zookeeper_create_user_group | bool
   tags:
@@ -18,8 +18,8 @@
 
 - name: Create zookeeper user
   user:
-    name: '{{ zookeeper_user }}'
-    group: '{{ zookeeper_group }}'
+    name: "{{ zookeeper_user }}"
+    group: "{{ zookeeper_group }}"
     state: present
     createhome: no
   when: zookeeper_create_user_group | bool
@@ -28,12 +28,12 @@
 
 - name: Check if ZooKeeper has already been downloaded and unpacked
   stat:
-    path: '{{ zookeeper_install_dir }}'
+    path: "{{ zookeeper_install_dir }}"
   register: dir
 
 - name: Download Apache ZooKeeper
   get_url:
-    url: '{{ zookeeper_mirror }}/zookeeper-{{ zookeeper_version }}/{{ zookeeper_package }}'
+    url: "{{ zookeeper_mirror }}/zookeeper-{{ zookeeper_version }}/{{ zookeeper_package }}"
     dest: /tmp
   when: not dir.stat.exists
   tags:
@@ -41,10 +41,11 @@
 
 - name: Create ZooKeeper installation dir {{ zookeeper_install_dir }}
   file:
-    path: '{{ zookeeper_install_dir }}'
+    path: "{{ zookeeper_install_dir }}"
     state: directory
-    group: '{{ zookeeper_group }}'
-    owner: '{{ zookeeper_user }}'
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
+    mode: 0755
   when: not dir.stat.exists
   tags:
     - zookeeper_dirs
@@ -52,49 +53,52 @@
 - name: Unpack Apache ZooKeeper
   unarchive:
     src: /tmp/{{ zookeeper_package }}
-    dest: '{{ zookeeper_install_dir }}'
+    dest: "{{ zookeeper_install_dir }}"
     copy: no
     extra_opts: [--strip-components=1]
-    group: '{{ zookeeper_group }}'
-    owner: '{{ zookeeper_user }}'
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
   when: not dir.stat.exists
   tags:
     - zookeeper_unpack
 
 - name: Create symlink to ZooKeeper installation
   file:
-    src: '{{ zookeeper_install_dir }}'
-    dest: '{{ zookeeper_dir }}'
+    src: "{{ zookeeper_install_dir }}"
+    dest: "{{ zookeeper_dir }}"
     state: link
-    group: '{{ zookeeper_group }}'
-    owner: '{{ zookeeper_user }}'
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
   tags:
     - zookeeper_dirs
 
 - name: Create directory for snapshot files and myid file
   file:
-    path: '{{ zookeeper_data_dir }}'
+    path: "{{ zookeeper_data_dir }}"
     state: directory
-    group: '{{ zookeeper_group }}'
-    owner: '{{ zookeeper_user }}'
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
+    mode: 0755
   tags:
     - zookeeper_dirs
 
 - name: Create directory for transaction log files
   file:
-    path: '{{ zookeeper_data_log_dir }}'
+    path: "{{ zookeeper_data_log_dir }}"
     state: directory
-    group: '{{ zookeeper_group }}'
-    owner: '{{ zookeeper_user }}'
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
+    mode: 0755
   tags:
     - zookeeper_dirs
 
 - name: Create zookeeper log directory
   file:
-    path: '{{ zookeeper_log_dir }}'
+    path: "{{ zookeeper_log_dir }}"
     state: directory
-    group: '{{ zookeeper_group }}'
-    owner: '{{ zookeeper_user }}'
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
+    mode: 0755
   tags:
     - zookeeper_dirs
 
@@ -102,7 +106,10 @@
 - name: Template configuration file to zoo.cfg
   template:
     src: zoo.cfg.j2
-    dest: '{{ zookeeper_dir }}/conf/zoo.cfg'
+    dest: "{{ zookeeper_dir }}/conf/zoo.cfg"
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
+    mode: 0644
   notify:
     - Restart ZooKeeper service
   tags:
@@ -112,27 +119,29 @@
   file:
     path: /etc/zookeeper
     state: directory
-    group: '{{ zookeeper_group }}'
-    owner: '{{ zookeeper_user }}'
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
+    mode: 0755
   tags:
     - zookeeper_config
 
 - name: Create symlink to ZooKeeper configuration file
   file:
-    src: '{{ zookeeper_dir }}/conf/zoo.cfg'
+    src: "{{ zookeeper_dir }}/conf/zoo.cfg"
     dest: /etc/zookeeper/zoo.cfg
     state: link
-    group: '{{ zookeeper_group }}'
-    owner: '{{ zookeeper_user }}'
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
   tags:
     - zookeeper_config
 
 - name: Template myid to {{ zookeeper_data_dir }}/myid
   template:
     src: myid.j2
-    dest: '{{ zookeeper_data_dir }}/myid'
-    group: '{{ zookeeper_group }}'
-    owner: '{{ zookeeper_user }}'
+    dest: "{{ zookeeper_data_dir }}/myid"
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
+    mode: 0644
   notify:
     - Restart ZooKeeper service
   tags:
@@ -141,7 +150,10 @@
 - name: Template /etc/default
   template:
     src: default.j2
-    dest: '/etc/default/zookeeper'
+    dest: "/etc/default/zookeeper"
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
+    mode: 0644
   notify:
     - Restart ZooKeeper service
   tags:
@@ -150,9 +162,9 @@
 # Uncomment the log4j.properties line for setting the maximum number of logs to rollover and keep
 - name: Set maximum log rollover history
   replace:
-    dest: '{{ zookeeper_dir }}/conf/log4j.properties'
-    regexp: '^#log4j.appender.ROLLINGFILE.MaxBackupIndex'
-    replace: 'log4j.appender.ROLLINGFILE.MaxBackupIndex'
+    dest: "{{ zookeeper_dir }}/conf/log4j.properties"
+    regexp: "^#log4j.appender.ROLLINGFILE.MaxBackupIndex"
+    replace: "log4j.appender.ROLLINGFILE.MaxBackupIndex"
   notify:
     - Restart ZooKeeper service
   tags:
@@ -162,6 +174,9 @@
   template:
     src: zookeeper.service.j2
     dest: "{{ zookeeper_unit_path }}"
+    group: "{{ zookeeper_group }}"
+    owner: "{{ zookeeper_user }}"
+    mode: 0644
   tags:
     - zookeeper_service
 

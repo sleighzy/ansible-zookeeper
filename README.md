@@ -1,12 +1,17 @@
 # Apache ZooKeeper
 
 [![Build Status](https://travis-ci.org/sleighzy/ansible-zookeeper.svg?branch=master)](https://travis-ci.org/sleighzy/ansible-zookeeper)
+![Lint Code Base](https://github.com/sleighzy/ansible-zookeeper/workflows/Lint%20Code%20Base/badge.svg)
+![Ansible Lint](https://github.com/sleighzy/ansible-zookeeper/workflows/Ansible%20Lint/badge.svg)
 
 Ansible role for installing and configuring Apache ZooKeeper
 
 Tested with :
+
 - RedHat 7 :heavy_check_mark:
+
 - RedHat 8 :heavy_check_mark:
+
 - Debian 10 :heavy_check_mark:
 
 This role can be used to install and cluster multiple ZooKeeper nodes, this uses
@@ -22,24 +27,25 @@ Java: Java 8
 
 ## Role Variables
 
-    zookeeper_mirror: http://www-eu.apache.org/dist/zookeeper
-    zookeeper_version: 3.6.2
-    zookeeper_package: apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz
-    zookeeper_group: zookeeper
-    zookeeper_user: zookeeper
-    zookeeper_root_dir: /usr/share
-    zookeeper_install_dir: '{{ zookeeper_root_dir}}/apache-zookeeper-{{zookeeper_version}}'
-    zookeeper_dir: '{{ zookeeper_root_dir }}/zookeeper'
-    zookeeper_log_dir: /var/log/zookeeper
-    zookeeper_data_dir: /var/lib/zookeeper
-    zookeeper_data_log_dir: /var/lib/zookeeper
-    zookeeper_client_port: 2181
-    zookeeper_id: 1
-    zookeeper_leader_port: 2888
-    zookeeper_election_port: 3888
-    zookeeper_servers: zookeeper-nodes
-    zookeeper_environment:
-        "JVMFLAGS": "-javaagent:/opt/jolokia/jolokia-jvm-1.6.0-agent.jar"
+| Variable                | Default                                                           |
+| ----------------------- | ----------------------------------------------------------------- |
+| zookeeper_mirror        | <http://www-eu.apache.org/dist/zookeeper>                         |
+| zookeeper_version       | 3.6.2                                                             |
+| zookeeper_package       | apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz               |
+| zookeeper_group         | zookeeper                                                         |
+| zookeeper_user          | zookeeper                                                         |
+| zookeeper_root_dir      | /usr/share                                                        |
+| zookeeper_install_dir   | '{{ zookeeper_root_dir}}/apache-zookeeper-{{zookeeper_version}}'  |
+| zookeeper_dir           | '{{ zookeeper_root_dir }}/zookeeper'                              |
+| zookeeper_log_dir       | /var/log/zookeeper                                                |
+| zookeeper_data_dir      | /var/lib/zookeeper                                                |
+| zookeeper_data_log_dir  | /var/lib/zookeeper                                                |
+| zookeeper_client_port   | 2181                                                              |
+| zookeeper_id            | 1                                                                 |
+| zookeeper_leader_port   | 2888                                                              |
+| zookeeper_election_port | 3888                                                              |
+| zookeeper_servers       | zookeeper-nodes                                                   |
+| zookeeper_environment   | "JVMFLAGS": "-javaagent:/opt/jolokia/jolokia-jvm-1.6.0-agent.jar" |
 
 ### Default Ports
 
