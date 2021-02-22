@@ -4,7 +4,14 @@
 ![Lint Code Base](https://github.com/sleighzy/ansible-zookeeper/workflows/Lint%20Code%20Base/badge.svg)
 ![Ansible Lint](https://github.com/sleighzy/ansible-zookeeper/workflows/Ansible%20Lint/badge.svg)
 
-Ansible role for installing and configuring Apache ZooKeeper on RedHat 7 and 8.
+Ansible role for installing and configuring Apache ZooKeeper
+
+| Platform / Status | Supported           | Tested             |
+| ------------------|:-------------------:|:------------------:|
+| Debian 10.x       | Yes                 | Yes                |
+| Ubuntu 18.04.x    | Yes                 | No                 |
+| RedHat 8          | Yes                 | Yes                |
+| RedHat 7          | Yes                 | Yes                |
 
 This role can be used to install and cluster multiple ZooKeeper nodes, this uses
 all hosts defined for the "zookeeper-nodes" group in the inventory file by
@@ -13,9 +20,7 @@ election ports.
 
 ## Requirements
 
-Platform: RedHat 7 and 8
-
-Java: Java 8
+Java: Java 8 / 11
 
 ## Role Variables
 

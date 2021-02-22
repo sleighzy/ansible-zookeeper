@@ -4,3 +4,4 @@
     name: zookeeper.service
     state: restarted
     daemon_reload: yes
+  when: zookeeper_restart
