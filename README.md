@@ -1,22 +1,21 @@
 # Apache ZooKeeper
 
-[![Build Status](https://travis-ci.org/sleighzy/ansible-zookeeper.svg?branch=master)](https://travis-ci.org/sleighzy/ansible-zookeeper)
-![Lint Code Base](https://github.com/sleighzy/ansible-zookeeper/workflows/Lint%20Code%20Base/badge.svg)
-![Ansible Lint](https://github.com/sleighzy/ansible-zookeeper/workflows/Ansible%20Lint/badge.svg)
+[![Build Status]](https://travis-ci.org/sleighzy/ansible-zookeeper)
+![Lint Code Base] ![Ansible Lint]
 
 Ansible role for installing and configuring Apache ZooKeeper
-
-| Platform / Status | Supported           | Tested             |
-| ------------------|:-------------------:|:------------------:|
-| Debian 10.x       | Yes                 | Yes                |
-| Ubuntu 18.04.x    | Yes                 | No                 |
-| RedHat 8          | Yes                 | Yes                |
-| RedHat 7          | Yes                 | Yes                |
 
 This role can be used to install and cluster multiple ZooKeeper nodes, this uses
 all hosts defined for the "zookeeper-nodes" group in the inventory file by
 default. All servers are added to the zoo.cfg file along with the leader and
 election ports.
+
+## Supported Platforms
+
+- Debian 10.x
+- RedHat 7
+- RedHat 8
+- Ubuntu 18.04.x
 
 ## Requirements
 
@@ -76,47 +75,77 @@ No dependencies
 
 ## Example Playbook
 
-    - hosts: zookeeper-nodes
-      roles:
-         - sleighzy.zookeeper
+```yaml
+- hosts: zookeeper-nodes
+  roles:
+    - sleighzy.zookeeper
+```
 
 ## Linting
 
-Linting should be done using
-[ansible-lint](https://docs.ansible.com/ansible-lint/)
+Linting should be done using [ansible-lint]
 
-    pip3 install ansible-lint --user
+```sh
+pip3 install ansible-lint --user
+```
 
 ## Testing
 
-This module uses [Molecule](https://molecule.readthedocs.io/en/stable/) as a
-testing framework.
+This module uses [Molecule] as a testing framework. This test suite creates a
+ZooKeeper cluster consisting of three nodes running within Docker containers.
+Each container runs a different OS to test the supported platforms for this
+Ansible role.
 
-As per the
-[Molecule Installation guide](https://molecule.readthedocs.io/en/stable/installation.html)
-this should be done using a virtual environment. The commands below will create
-a Python virtual environment and install Molecule including the Docker driver.
+As per the [Molecule Installation guide] this should be done using a virtual
+environment. The commands below will create a Python virtual environment and
+install Molecule including the Docker driver.
 
-    virtualenv . && \
-        source ./bin/activate && \
-        pip install 'molecule[docker]' && \
-        molecule create
+```sh
+$ python3 -m venv molecule-venv
+$ source molecule-venv/bin/activate
+(molecule-venv) $ python3 -m pip install --user "molecule[docker,lint]"
+```
 
 Run playbook and tests. Linting errors need to be corrected before Molecule will
-execute any tests.
+execute any tests. This will run all tests and then destroy the Docker
+containers.
 
-    molecule test
+```sh
+molecule test
+```
 
 The below command can be used to run the playbook without the tests. This can be
 run multiple times when making changes to the role, and ensuring that operations
 are idempotent.
 
-    molecule converge
+```sh
+molecule converge
+```
 
-Tear down Molecule tests and Docker container.
+The below commands can be used to just run the tests without tearing everything
+down. The command `molecule verify` can be repeated for each test run.
 
-    molecule destroy
+```sh
+molecule create
+molecule converge
+molecule verify
+```
+
+Tear down Molecule tests and Docker containers.
+
+```sh
+molecule destroy
+```
 
 ## License
 
-MIT
+[![MIT license]](https://lbesson.mit-license.org/)
+
+[ansible lint]:
+  https://github.com/sleighzy/ansible-zookeeper/workflows/Ansible%20Lint/badge.svg
+[ansible-lint]: https://docs.ansible.com/ansible-lint/
+[build status]:
+  https://travis-ci.org/sleighzy/ansible-zookeeper.svg?branch=master
+[lint code base]:
+  https://github.com/sleighzy/ansible-zookeeper/workflows/Lint%20Code%20Base/badge.svg
+[mit license]: https://img.shields.io/badge/License-MIT-blue.svg
