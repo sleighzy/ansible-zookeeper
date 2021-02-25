@@ -74,6 +74,8 @@ lint: |
   set -e
   yamllint -c ./.yamllint.yaml .
   ansible-lint -c ./.ansible-lint .
+verifier:
+  name: ansible
 scenario:
   create_sequence:
     - dependency

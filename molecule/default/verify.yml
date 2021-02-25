@@ -1,0 +1,110 @@
+- name: Verify
+  hosts: all
+
+  tasks:
+    - name: Get users
+      getent:
+        database: passwd
+
+    - name: Get groups
+      getent:
+        database: group
+
+    - name: Assert that user and group 'zookeeper' exists
+      assert:
+        that:
+          - "'zookeeper' in getent_passwd"
+          - "'zookeeper' in getent_group"
+
+    - name: Register '/usr/share/apache-zookeeper-3.6.2' installation directory status
+      stat:
+        path: '/usr/share/apache-zookeeper-3.6.2'
+      register: install_dir
+
+    - name: Assert that '/usr/share/apache-zookeeper-3.6.2' directory is created
+      assert:
+        that:
+          - install_dir.stat.exists
+          - install_dir.stat.isdir
+          - install_dir.stat.pw_name == 'zookeeper'
+          - install_dir.stat.gr_name == 'zookeeper'
+
+    - name: Register '/usr/share/zookeeper' symlink directory status
+      stat:
+        path: '/usr/share/zookeeper'
+      register: zookeeper_dir
+
+    - name: Assert that '/usr/share/zookeeper' symlink is created
+      assert:
+        that:
+          - zookeeper_dir.stat.exists
+          - zookeeper_dir.stat.islnk
+          - zookeeper_dir.stat.lnk_target == '/usr/share/apache-zookeeper-3.6.2'
+
+    - name: Register '/etc/zookeeper' directory status
+      stat:
+        path: '/etc/zookeeper'
+      register: config_dir
+
+    - name: Assert that '/etc/zookeeper' directory is created
+      assert:
+        that:
+          - config_dir.stat.exists
+          - config_dir.stat.isdir
+          - config_dir.stat.pw_name == 'zookeeper'
+          - config_dir.stat.gr_name == 'zookeeper'
+
+    - name: Populate service facts
+      service_facts:
+
+    - name: Assert that the ZooKeeper service is installed, running, and enabled
+      assert:
+        that:
+          - "'zookeeper.service' in ansible_facts.services"
+          - ansible_facts.services['zookeeper.service'].state == 'running'
+          - ansible_facts.services['zookeeper.service'].status == 'enabled'
+
+    - name: Delete Znode if it already exists
+      block:
+        - name: Get Znode
+          command: /usr/share/zookeeper/bin/zkCli.sh get /TestZnode1
+          when: ansible_hostname == "zookeeper-1"
+          ignore_errors: yes
+          register: command_result
+
+        - name: Delete Znode if it already exists
+          command: /usr/share/zookeeper/bin/zkCli.sh delete /TestZnode1
+          register: command_result
+          when:
+            - ansible_hostname == "zookeeper-1"
+            - '"test-node-1" in command_result.stdout'
+
+      when: ansible_hostname == "zookeeper-1"
+      ignore_errors: yes
+
+    - name: Create Znode and assert visible by all servers
+      block:
+        - name: Create a Znode entry in ZooKeeper
+          command: /usr/share/zookeeper/bin/zkCli.sh create /TestZnode1 "test-node-1"
+          when: ansible_hostname == "zookeeper-1"
+          register: command_result
+
+        - name: Output Znode creation command result
+          debug:
+            msg: '{{ command_result }}'
+          when: ansible_hostname == "zookeeper-1"
+
+        - name: Assert that the Znode creation command succeeded
+          assert:
+            that:
+              - '"Created /TestZnode1" in command_result.stderr'
+          when: ansible_hostname == "zookeeper-1"
+
+        - name: Read the created Znode
+          command: /usr/share/zookeeper/bin/zkCli.sh get /TestZnode1
+          register: command_result
+
+        - name: Assert that ZooKeeper servers can read the created Znode
+          assert:
+            that:
+              - '"test-node-1" in command_result.stdout'
