@@ -5,21 +5,104 @@ driver:
   name: docker
 platforms:
   - name: zookeeper-1
-    image: centos:7
-    command: /sbin/init
+    image: geerlingguy/docker-debian10-ansible:latest
+    docker_networks:
+      - name: zookeeper
+        ipam_config:
+          - subnet: '172.26.0.0/16'
+    networks:
+      - name: zookeeper
+        ipv4_address: '172.26.10.1'
+    etc_hosts: "{'zookeeper-2': '172.26.10.2', 'zookeeper-3': '172.26.10.3'}"
+    pre_build_image: true
     privileged: True
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    capabilities:
+      - SYS_ADMIN
+    command: /lib/systemd/systemd
+    groups:
+      - zookeeper-nodes
+  - name: zookeeper-2
+    image: centos:7
+    networks:
+      - name: zookeeper
+        ipv4_address: '172.26.10.2'
+    etc_hosts: "{'zookeeper-1': '172.26.10.1', 'zookeeper-3': '172.26.10.3'}"
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    command: '/sbin/init'
+    capabilities:
+      - SYS_ADMIN
+    groups:
+      - zookeeper-nodes
+  - name: zookeeper-3
+    image: registry.access.redhat.com/ubi8/ubi-init
+    networks:
+      - name: zookeeper
+        ipv4_address: '172.26.10.3'
+    etc_hosts: "{'zookeeper-1': '172.26.10.1', 'zookeeper-2': '172.26.10.2'}"
+    privileged: True
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    command: '/usr/sbin/init'
+    pre_build_image: true
+    capabilities:
+      - SYS_ADMIN
     groups:
       - zookeeper-nodes
 provisioner:
   name: ansible
-  lint: |
-    set -e
-    yamllint .
-    ansible-lint
-    flake8
   inventory:
     host_vars:
       zookeeper-1:
         zookeeper_id: 1
+      zookeeper-2:
+        zookeeper_id: 2
+      zookeeper-3:
+        zookeeper_id: 3
+lint: |
+  set -e
+  yamllint -c ./.yamllint.yaml .
+  ansible-lint -c ./.ansible-lint .
+verifier:
+  name: ansible
 scenario:
-  name: default
+  create_sequence:
+    - dependency
+    - create
+    - prepare
+  check_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - create
+    - prepare
+    - converge
+    - check
+    - destroy
+  converge_sequence:
+    - dependency
+    - create
+    - prepare
+    - converge
+  test_sequence:
+    - lint
+    - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - verify
+    - destroy

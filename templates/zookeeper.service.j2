@@ -9,6 +9,7 @@ Type=forking
 EnvironmentFile=/etc/default/zookeeper
 ExecStart={{ zookeeper_dir }}/bin/zkServer.sh start
 ExecStop={{ zookeeper_dir }}/bin/zkServer.sh stop
+SuccessExitStatus=143
 Restart=on-failure
 User={{ zookeeper_user }}
 Group={{ zookeeper_group }}
