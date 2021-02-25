@@ -1,7 +1,7 @@
 # Apache ZooKeeper
 
 [![Build Status]](https://travis-ci.org/sleighzy/ansible-zookeeper)
-![Lint Code Base] ![Ansible Lint]
+![Lint Code Base] ![Ansible Lint] ![Molecule]
 
 Ansible role for installing and configuring Apache ZooKeeper
 
@@ -91,10 +91,10 @@ pip3 install ansible-lint --user
 
 ## Testing
 
-This module uses [Molecule] as a testing framework. This test suite creates a
-ZooKeeper cluster consisting of three nodes running within Docker containers.
-Each container runs a different OS to test the supported platforms for this
-Ansible role.
+This module uses the [Ansible Molecule] testing framework. This test suite
+creates a ZooKeeper cluster consisting of three nodes running within Docker
+containers. Each container runs a different OS to test the supported platforms
+for this Ansible role.
 
 As per the [Molecule Installation guide] this should be done using a virtual
 environment. The commands below will create a Python virtual environment and
@@ -144,8 +144,11 @@ molecule destroy
 [ansible lint]:
   https://github.com/sleighzy/ansible-zookeeper/workflows/Ansible%20Lint/badge.svg
 [ansible-lint]: https://docs.ansible.com/ansible-lint/
+[ansible molecule]: https://molecule.readthedocs.io/en/latest/
 [build status]:
   https://travis-ci.org/sleighzy/ansible-zookeeper.svg?branch=master
 [lint code base]:
   https://github.com/sleighzy/ansible-zookeeper/workflows/Lint%20Code%20Base/badge.svg
 [mit license]: https://img.shields.io/badge/License-MIT-blue.svg
+[molecule]:
+  https://github.com/sleighzy/ansible-zookeeper/workflows/Molecule/badge.svg
