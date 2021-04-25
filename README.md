@@ -16,6 +16,7 @@ election ports.
 - RedHat 7
 - RedHat 8
 - Ubuntu 18.04.x
+- Ubuntu 20.04.x
 
 ## Requirements
 
@@ -100,10 +101,15 @@ As per the [Molecule Installation guide] this should be done using a virtual
 environment. The commands below will create a Python virtual environment and
 install Molecule including the Docker driver.
 
+_Note:_ Due to a breaking change in Molecule 3.1.1 the Docker driver for
+Molecule has been removed and the `molecule-driver` module must be installed
+separately.
+
 ```sh
 $ python3 -m venv molecule-venv
 $ source molecule-venv/bin/activate
-(molecule-venv) $ python3 -m pip install --user "molecule[docker,lint]"
+(molecule-venv) $ python3 -m pip install molecule-docker
+(molecule-venv) $ python3 -m pip install "molecule[docker,lint]"
 ```
 
 Run playbook and tests. Linting errors need to be corrected before Molecule will
