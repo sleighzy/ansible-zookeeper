@@ -16,17 +16,25 @@ election ports.
 - RedHat 7
 - RedHat 8
 - Ubuntu 18.04.x
+- Ubuntu 20.04.x
 
 ## Requirements
 
 Java: Java 8 / 11
+
+Ansible 2.9.16 or 2.10.4 are the minimum required versions to workaround an
+issue with certain kernels that have broken the `systemd` status check. The
+error message "`Service is in unknown state`" will be output when attempting to
+start the service via the Ansible role and the task will fail. The service will
+start as expected if the `systemctl start` command is run on the physical host.
+See <https://github.com/ansible/ansible/issues/71528> for more information.
 
 ## Role Variables
 
 | Variable                | Default                                                           |
 | ----------------------- | ----------------------------------------------------------------- |
 | zookeeper_mirror        | <http://www-eu.apache.org/dist/zookeeper>                         |
-| zookeeper_version       | 3.6.2                                                             |
+| zookeeper_version       | 3.7.0                                                             |
 | zookeeper_package       | apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz               |
 | zookeeper_group         | zookeeper                                                         |
 | zookeeper_user          | zookeeper                                                         |
@@ -100,10 +108,15 @@ As per the [Molecule Installation guide] this should be done using a virtual
 environment. The commands below will create a Python virtual environment and
 install Molecule including the Docker driver.
 
+_Note:_ Due to a breaking change in Molecule 3.1.1 the Docker driver for
+Molecule has been removed and the `molecule-driver` module must be installed
+separately.
+
 ```sh
 $ python3 -m venv molecule-venv
 $ source molecule-venv/bin/activate
-(molecule-venv) $ python3 -m pip install --user "molecule[docker,lint]"
+(molecule-venv) $ python3 -m pip install molecule-docker
+(molecule-venv) $ python3 -m pip install "molecule[docker,lint]"
 ```
 
 Run playbook and tests. Linting errors need to be corrected before Molecule will
