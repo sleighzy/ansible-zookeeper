@@ -115,8 +115,7 @@ separately.
 ```sh
 $ python3 -m venv molecule-venv
 $ source molecule-venv/bin/activate
-(molecule-venv) $ python3 -m pip install molecule-docker
-(molecule-venv) $ python3 -m pip install "molecule[docker,lint]"
+(molecule-venv) $ python3 -m pip install ansible ansible-lint yamllint docker molecule-docker "molecule[docker,lint]"
 ```
 
 Run playbook and tests. Linting errors need to be corrected before Molecule will

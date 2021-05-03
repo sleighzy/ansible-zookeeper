@@ -45,7 +45,7 @@ autopurge.purgeInterval={{ zookeeper_purge_interval }}
 # Each server also needs a /var/lib/zookeeper/myid file created containing
 # a single unique number, e.g. 1, 2, etc.
 {% for host in zookeeper_servers %}
-server.{{ hostvars[host].zookeeper_id }}={{ hostvars[host].ansible_nodename }}:{{ zookeeper_leader_port }}:{{ zookeeper_election_port }}
+server.{{ hostvars[host].zookeeper_id | default(zookeeper_id) }}={{ hostvars[host].ansible_nodename }}:{{ zookeeper_leader_port }}:{{ zookeeper_election_port }}
 {% endfor %}
 
 {% if zookeeper_version is version('3.5', '>=') %}

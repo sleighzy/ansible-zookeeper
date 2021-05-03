@@ -64,8 +64,9 @@ provisioner:
   name: ansible
   inventory:
     host_vars:
+      # The zookeeper_id is not provided for zookeeper-1 as this
+      # should use the value of 1 from the defaults.
       zookeeper-1:
-        zookeeper_id: 1
       zookeeper-2:
         zookeeper_id: 2
       zookeeper-3:
