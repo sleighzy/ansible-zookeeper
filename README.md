@@ -77,6 +77,14 @@ See <https://github.com/ansible/ansible/issues/71528> for more information.
 - The ZooKeeper service can be started via: `systemctl start zookeeper`
 - The ZooKeeper service can be stopped via: `systemctl stop zookeeper`
 
+## Which zookeeper is the leader ?
+
+```bash
+for i in 1 2 3 ; do
+  echo "zookeeper0$i is a "$(echo stat | nc zookeeper0$i 2181 | grep ^Mode | awk '{print $2}'); 
+done
+```
+
 ## Dependencies
 
 No dependencies

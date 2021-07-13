@@ -55,6 +55,7 @@ admin.serverAddress={{ zookeeper_server_address }}
 admin.serverPort={{ zookeeper_server_port }}
 admin.idleTimeout={{ zookeeper_idle_timeout }}
 admin.commandURL={{ zookeeper_command_url }}
+4lw.commands.whitelist={{ zookeeper_command_whitelist }}
 {% endif %}
 
 {% if zookeeper_version is version('3.6', '>=') %}

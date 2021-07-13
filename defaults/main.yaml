@@ -75,6 +75,8 @@ zookeeper_server_port: 8080
 zookeeper_idle_timeout: 30000
 # The URL for listing and issuing commands relative to the root URL. Defaults to "/commands".
 zookeeper_command_url: /commands
+# See https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_4lw. Use * to allow all commands.
+zookeeper_command_whitelist: stat, ruok, conf, isro
 
 # Set to "org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider" to enable Prometheus.io exporter.
 zookeeper_metricsprovider_classname: org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider
