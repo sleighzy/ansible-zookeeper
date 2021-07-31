@@ -79,13 +79,15 @@ See <https://github.com/ansible/ansible/issues/71528> for more information.
 
 ## Four Letter Word Commands
 
-ZooKeeper can use commands based on four letter words, see https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_4lw
+ZooKeeper can use commands based on four letter words, see
+<https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_4lw>
 
-The below example uses the stat command to find out which instance is the leader :
+The below example uses the stat command to find out which instance is the leader
+:
 
 ```bash
 for i in 1 2 3 ; do
-  echo "zookeeper0$i is a "$(echo stat | nc zookeeper0$i 2181 | grep ^Mode | awk '{print $2}'); 
+  echo "zookeeper0$i is a "$(echo stat | nc zookeeper0$i 2181 | grep ^Mode | awk '{print $2}');
 done
 ```
 
