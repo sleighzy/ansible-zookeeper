@@ -12,6 +12,7 @@
   group:
     name: "{{ zookeeper_group }}"
     state: present
+    system: yes
   when: zookeeper_create_user_group | bool
   tags:
     - zookeeper_group
@@ -22,6 +23,7 @@
     group: "{{ zookeeper_group }}"
     state: present
     createhome: no
+    system: yes
   when: zookeeper_create_user_group | bool
   tags:
     - zookeeper_user
