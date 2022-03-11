@@ -1,5 +1,7 @@
 ---
 galaxy_info:
+  namespace: sleighzy
+  role_name: zookeeper
   author: Simon Leigh
   description: Apache ZooKeeper installation for RHEL/CentOS and Debian/Ubuntu
   license: MIT
