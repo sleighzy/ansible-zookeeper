@@ -1,6 +1,6 @@
 ---
 - name: Load OS-specific variables
-  include_vars: "{{ item }}"
+  ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
     - ../vars/{{ ansible_os_family }}.yml
     - ../vars/{{ ansible_distribution_release }}.yml
@@ -9,7 +9,7 @@
     - always
 
 - name: Create zookeeper group
-  group:
+  ansible.builtin.group:
     name: "{{ zookeeper_group }}"
     state: present
     system: yes
@@ -18,7 +18,7 @@
     - zookeeper_group
 
 - name: Create zookeeper user
-  user:
+  ansible.builtin.user:
     name: "{{ zookeeper_user }}"
     group: "{{ zookeeper_group }}"
     state: present
@@ -29,12 +29,12 @@
     - zookeeper_user
 
 - name: Check if ZooKeeper has already been downloaded and unpacked
-  stat:
+  ansible.builtin.stat:
     path: "{{ zookeeper_install_dir }}"
   register: dir
 
 - name: Download Apache ZooKeeper
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ zookeeper_mirror }}/zookeeper-{{ zookeeper_version }}/{{ zookeeper_package }}"
     dest: /tmp
   when: not dir.stat.exists
@@ -42,7 +42,7 @@
     - zookeeper_download
 
 - name: Create ZooKeeper installation dir {{ zookeeper_install_dir }}
-  file:
+  ansible.builtin.file:
     path: "{{ zookeeper_install_dir }}"
     state: directory
     group: "{{ zookeeper_group }}"
@@ -53,7 +53,7 @@
     - zookeeper_dirs
 
 - name: Unpack Apache ZooKeeper
-  unarchive:
+  ansible.builtin.unarchive:
     src: /tmp/{{ zookeeper_package }}
     dest: "{{ zookeeper_install_dir }}"
     copy: no
@@ -65,7 +65,7 @@
     - zookeeper_unpack
 
 - name: Create symlink to ZooKeeper installation
-  file:
+  ansible.builtin.file:
     src: "{{ zookeeper_install_dir }}"
     dest: "{{ zookeeper_dir }}"
     state: link
@@ -75,7 +75,7 @@
     - zookeeper_dirs
 
 - name: Create directory for snapshot files and myid file
-  file:
+  ansible.builtin.file:
     path: "{{ zookeeper_data_dir }}"
     state: directory
     group: "{{ zookeeper_group }}"
@@ -85,7 +85,7 @@
     - zookeeper_dirs
 
 - name: Create directory for transaction log files
-  file:
+  ansible.builtin.file:
     path: "{{ zookeeper_data_log_dir }}"
     state: directory
     group: "{{ zookeeper_group }}"
@@ -95,7 +95,7 @@
     - zookeeper_dirs
 
 - name: Create zookeeper log directory
-  file:
+  ansible.builtin.file:
     path: "{{ zookeeper_log_dir }}"
     state: directory
     group: "{{ zookeeper_group }}"
@@ -106,7 +106,7 @@
 
 # /usr/share/zookeeper/conf/zoo.cfg is the default file ZooKeeper will use when starting
 - name: Template configuration file to zoo.cfg
-  template:
+  ansible.builtin.template:
     src: zoo.cfg.j2
     dest: "{{ zookeeper_dir }}/conf/zoo.cfg"
     group: "{{ zookeeper_group }}"
@@ -118,7 +118,7 @@
     - zookeeper_config
 
 - name: Create directory for symlink to ZooKeeper configuration file
-  file:
+  ansible.builtin.file:
     path: /etc/zookeeper
     state: directory
     group: "{{ zookeeper_group }}"
@@ -128,7 +128,7 @@
     - zookeeper_config
 
 - name: Create symlink to ZooKeeper configuration file
-  file:
+  ansible.builtin.file:
     src: "{{ zookeeper_dir }}/conf/zoo.cfg"
     dest: /etc/zookeeper/zoo.cfg
     state: link
@@ -138,7 +138,7 @@
     - zookeeper_config
 
 - name: Template myid to {{ zookeeper_data_dir }}/myid
-  template:
+  ansible.builtin.template:
     src: myid.j2
     dest: "{{ zookeeper_data_dir }}/myid"
     group: "{{ zookeeper_group }}"
@@ -150,7 +150,7 @@
     - zookeeper_config
 
 - name: Template /etc/default
-  template:
+  ansible.builtin.template:
     src: default.j2
     dest: "/etc/default/zookeeper"
     group: "{{ zookeeper_group }}"
@@ -163,7 +163,7 @@
 
 # Uncomment the log4j.properties line for setting the maximum number of logs to rollover and keep
 - name: Set maximum log rollover history
-  replace:
+  ansible.builtin.replace:
     dest: "{{ zookeeper_dir }}/conf/log4j.properties"
     regexp: "^#log4j.appender.ROLLINGFILE.MaxBackupIndex"
     replace: "log4j.appender.ROLLINGFILE.MaxBackupIndex"
@@ -173,7 +173,7 @@
     - zookeeper_config
 
 - name: Template ZooKeeper systemd service file
-  template:
+  ansible.builtin.template:
     src: zookeeper.service.j2
     dest: "{{ zookeeper_unit_path }}"
     group: "{{ zookeeper_group }}"
@@ -183,7 +183,7 @@
     - zookeeper_service
 
 - name: Start the ZooKeeper service
-  systemd:
+  ansible.builtin.systemd:
     name: zookeeper.service
     state: started
     enabled: yes
@@ -193,7 +193,7 @@
 
 # Cleanup install by deleting downloaded ZooKeeper archive
 - name: Delete /tmp/{{ zookeeper_package }} file
-  file:
+  ansible.builtin.file:
     path: /tmp/{{ zookeeper_package }}
     state: absent
   tags:
@@ -203,7 +203,7 @@
 # other dependent roles. Those roles can check for this fact to determine whether or not this role
 # should be run. Failing to do so will mean that this role is executed even if it has already been run.
 - name: Set fact zookeeper_installed
-  set_fact:
+  ansible.builtin.set_fact:
     zookeeper_installed: true
   tags:
     - zookeeper_install_fact
