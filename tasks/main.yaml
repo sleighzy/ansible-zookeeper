@@ -1,6 +1,6 @@
 ---
 - name: Set zookeeper version variables
-  set_fact:
+  ansible.builtin.set_fact:
     zookeeper_version_major: "{{ zookeeper_version.split('.')[0] }}"
     zookeeper_version_minor: "{{ zookeeper_version.split('.')[1] }}"
 
