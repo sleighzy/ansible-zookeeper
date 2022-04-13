@@ -1,4 +1,9 @@
 ---
+- name: Set zookeeper version variables
+  ansible.builtin.set_fact:
+    zookeeper_version_major: "{{ zookeeper_version.split('.')[0] }}"
+    zookeeper_version_minor: "{{ zookeeper_version.split('.')[1] }}"
+
 - name: Load OS-specific variables
   ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
@@ -171,6 +176,7 @@
     - Restart ZooKeeper service
   tags:
     - zookeeper_config
+  when: zookeeper_version_major|int == 3 and zookeeper_version_minor|int < 8
 
 - name: Template ZooKeeper systemd service file
   ansible.builtin.template:
