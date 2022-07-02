@@ -1,7 +1,7 @@
 # Apache ZooKeeper
 
 [![Build Status]](https://travis-ci.org/sleighzy/ansible-zookeeper)
-![Lint Code Base] ![Ansible Lint] ![Molecule]
+![Lint Code Base] ![Molecule]
 
 Ansible role for installing and configuring Apache ZooKeeper
 
@@ -167,8 +167,6 @@ molecule destroy
 
 [![MIT license]](https://lbesson.mit-license.org/)
 
-[ansible lint]:
-  https://github.com/sleighzy/ansible-zookeeper/workflows/Ansible%20Lint/badge.svg
 [ansible-lint]: https://docs.ansible.com/ansible-lint/
 [ansible molecule]: https://molecule.readthedocs.io/en/latest/
 [build status]:
