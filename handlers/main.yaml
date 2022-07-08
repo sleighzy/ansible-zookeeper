@@ -5,3 +5,6 @@
     state: restarted
     daemon_reload: yes
   when: zookeeper_restart
+
+- name: Reload firewalld
+  shell: firewall-cmd --reload
