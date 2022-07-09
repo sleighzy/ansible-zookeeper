@@ -4,11 +4,51 @@
   gather_facts: true
 
   pre_tasks:
+    - name: Print some debug information 
+      vars: 
+        msg: |
+          Module Variables ("vars"):
+          --------------------------------
+          {{ vars | to_nice_json }} 
+          
+          Environment Variables ("environment"):
+          --------------------------------
+          {{ environment | to_nice_json }} 
+          
+          GROUP NAMES Variables ("group_names"):
+          --------------------------------
+          {{ group_names | to_nice_json }}
+          
+          GROUPS Variables ("groups"):
+          --------------------------------
+          {{ groups | to_nice_json }}
+          
+          HOST Variables ("hostvars"):
+          --------------------------------
+          {{ hostvars | to_nice_json }} 
+    
+      debug: 
+        msg: "{{ msg.split('\n') }}"       
+      tags: debug_info
+
     - name: Install Java 8 (OpenJDK) on RedHat/CentOS
       yum:
         name: java-1.8.0-openjdk
         state: installed
       when: ansible_os_family == "RedHat"
+    
+    - name: Install python-firewall
+      yum:
+        name: python3-firewall,firewalld
+        state: installed
+      when: ansible_distribution == "Rocky" and ansible_distribution_major_version == "8"
+
+    - name: Install python-firewall
+      yum:
+        name: python-firewall,firewalld
+        state: installed
+      when: ansible_distribution == "CentOs" and ansible_distribution_major_version == "7"
+
 
     - name: Install Java 11 (OpenJDK) on Debian
       apt:

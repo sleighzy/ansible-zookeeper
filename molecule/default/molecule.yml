@@ -43,7 +43,7 @@ platforms:
     groups:
       - zookeeper-nodes
   - name: zookeeper-3
-    image: registry.access.redhat.com/ubi8/ubi-init
+    image: rockylinux:8
     networks:
       - name: zookeeper
         ipv4_address: '172.26.10.3'
