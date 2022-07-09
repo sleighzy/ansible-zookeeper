@@ -7,4 +7,6 @@
   when: zookeeper_restart
 
 - name: Reload firewalld
-  shell: firewall-cmd --reload
+  ansible.builtin.systemd:
+    name: firewalld
+    state: reloaded

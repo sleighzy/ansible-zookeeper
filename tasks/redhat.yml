@@ -1,5 +1,6 @@
 - name: Add firewalld rules
-  shell: "firewall-cmd --add-port={2181,2888,3888}/tcp --permanent"
+  firewalld:
+    port: 2181/tcp,2888/tcp,3888/tcp
+    permanent: yes
+    state: enabled
   notify: Reload firewalld
-  tags:
-    - firewalld
