@@ -21,6 +21,9 @@ zookeeper_start: yes
 # Restart zookeeper on configuration change
 zookeeper_restart: yes
 
+# setup firewalld rules
+zookeeper_firewalld: false
+
 # Configuration variables
 
 # The unit of time for ZooKeeper translated to milliseconds.

@@ -9,6 +9,7 @@ This role can be used to install and cluster multiple ZooKeeper nodes, this uses
 all hosts defined for the "zookeeper-nodes" group in the inventory file by
 default. All servers are added to the zoo.cfg file along with the leader and
 election ports.
+Firewall ports could be opened after setting true to zookeeper_firewalld variable
 
 ## Supported Platforms
 
@@ -50,6 +51,7 @@ See <https://github.com/ansible/ansible/issues/71528> for more information.
 | zookeeper_election_port | 3888                                                              |
 | zookeeper_servers       | zookeeper-nodes                                                   |
 | zookeeper_environment   | "JVMFLAGS": "-javaagent:/opt/jolokia/jolokia-jvm-1.6.0-agent.jar" |
+| zookeeper_firewalld     | false                                                             |
 
 ### Default Ports
 
