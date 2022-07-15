@@ -213,3 +213,7 @@
     zookeeper_installed: true
   tags:
     - zookeeper_install_fact
+
+# (Rhel/Rocky) 8 firewall rules
+- include_tasks: firewalld.yml
+  when: (ansible_os_family == "RedHat" or ansible_os_family == "Rocky") and ansible_distribution_major_version == "8" and zookeeper_firewalld
