@@ -46,7 +46,7 @@ autopurge.purgeInterval={{ zookeeper_purge_interval }}
 # a single unique number, e.g. 1, 2, etc.
 {% for host in zookeeper_servers %}
 server.{{ hostvars[host].zookeeper_id | default(zookeeper_id) }}={{
-host if zookeeper_use_servers_inventory_hostname else hostvars[host].ansible_nodename
+host if zookeeper_servers_use_inventory_hostname else hostvars[host].ansible_nodename
 }}:{{ zookeeper_leader_port }}:{{ zookeeper_election_port }}
 {% endfor %}
 
