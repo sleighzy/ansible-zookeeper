@@ -66,6 +66,7 @@ zookeeper_id: 1
 zookeeper_leader_port: 2888
 zookeeper_election_port: 3888
 zookeeper_servers: "{{ groups['zookeeper-nodes'] }}"
+zookeeper_use_servers_inventory_hostname: false
 zookeeper_environment: {}
 
 # Set to "false" to disable the AdminServer. By default the AdminServer is enabled.
