@@ -10,3 +10,5 @@ molecule-venv/
 
 super-linter.log
 .vscode
+
+*.iml
