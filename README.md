@@ -32,26 +32,67 @@ See <https://github.com/ansible/ansible/issues/71528> for more information.
 
 ## Role Variables
 
-| Variable                | Default                                                           |
-| ----------------------- | ----------------------------------------------------------------- |
-| zookeeper_mirror        | <http://www-eu.apache.org/dist/zookeeper>                         |
-| zookeeper_version       | 3.7.1                                                             |
-| zookeeper_package       | apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz               |
-| zookeeper_group         | zookeeper                                                         |
-| zookeeper_user          | zookeeper                                                         |
-| zookeeper_root_dir      | /usr/share                                                        |
-| zookeeper_install_dir   | '{{ zookeeper_root_dir}}/apache-zookeeper-{{zookeeper_version}}'  |
-| zookeeper_dir           | '{{ zookeeper_root_dir }}/zookeeper'                              |
-| zookeeper_log_dir       | /var/log/zookeeper                                                |
-| zookeeper_data_dir      | /var/lib/zookeeper                                                |
-| zookeeper_data_log_dir  | /var/lib/zookeeper                                                |
-| zookeeper_client_port   | 2181                                                              |
-| zookeeper_id            | 1                                                                 |
-| zookeeper_leader_port   | 2888                                                              |
-| zookeeper_election_port | 3888                                                              |
-| zookeeper_servers       | zookeeper-nodes                                                   |
-| zookeeper_environment   | "JVMFLAGS": "-javaagent:/opt/jolokia/jolokia-jvm-1.6.0-agent.jar" |
-| zookeeper_firewalld     | false                                                             |
+| Variable                                 | Default                                                           | Comment                                                        |
+|------------------------------------------|-------------------------------------------------------------------|----------------------------------------------------------------|
+| zookeeper_mirror                         | <http://www-eu.apache.org/dist/zookeeper>                         ||
+| zookeeper_version                        | 3.7.1                                                             ||
+| zookeeper_package                        | apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz               ||
+| zookeeper_group                          | zookeeper                                                         ||
+| zookeeper_user                           | zookeeper                                                         ||
+| zookeeper_root_dir                       | /usr/share                                                        ||
+| zookeeper_install_dir                    | '{{ zookeeper_root_dir}}/apache-zookeeper-{{zookeeper_version}}'  ||
+| zookeeper_dir                            | '{{ zookeeper_root_dir }}/zookeeper'                              ||
+| zookeeper_log_dir                        | /var/log/zookeeper                                                ||
+| zookeeper_data_dir                       | /var/lib/zookeeper                                                ||
+| zookeeper_data_log_dir                   | /var/lib/zookeeper                                                ||
+| zookeeper_client_port                    | 2181                                                              ||
+| zookeeper_id                             | 1                                                                 | Unique per server and should be declared in the inventory file |
+| zookeeper_leader_port                    | 2888                                                              ||
+| zookeeper_election_port                  | 3888                                                              ||
+| zookeeper_servers                        | zookeeper-nodes                                                   | See below                                                      |
+| zookeeper_servers_use_inventory_hostname | false                                                             | See below                                                      |
+| zookeeper_environment                    | "JVMFLAGS": "-javaagent:/opt/jolokia/jolokia-jvm-1.6.0-agent.jar" ||
+| zookeeper_firewalld                      | false                                                             ||
+
+## Inventory and zookeeper_servers variable
+
+zookeeper_servers variable above accepts a list of inventory host names.
+These will be used in the `zoo.cfg` to configure a multi-server cluster
+so the hosts can find each other. By default, the hostname used in
+the `zoo.cfg` will be the hostname reported by the `hostname` command on
+the server(provided by the ansible_nodename variable). See the example below.
+
+Assuming the below inventory file, and that the `hostname` command returns
+only the hostname and does not include the domain name.
+
+```ini
+[zookeeper-nodes]
+zoo1.foo.com zookeeper_id=1       #hostname command returns "zoo1"
+zoo2.foo.com zookeeper_id=2       #hostname command returns "zoo2"
+zoo3.foo.com zookeeper_id=3       #hostname command returns "zoo3"
+```
+
+And assuming the following role variables:
+
+```yaml
+...
+    - role: sleighzy.zookeeper
+      zookeeper_servers:
+        - zoo1.foo.com
+        - zoo2.foo.com
+        - zoo3.foo.com
+```
+
+The templated `zoo.cfg` file will contain the below entries:
+
+```ini
+server.1=zoo1:2888:3888
+server.2=zoo2:2888:3888
+server.3=zoo3:2888:3888
+```
+
+If you DO NOT want this behaviour and would like the `zoo.cfg` to template the
+inventory_hostname then set `zookeeper_servers_use_inventory_hostname` to `true`
 
 ### Default Ports
 
