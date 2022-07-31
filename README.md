@@ -52,6 +52,7 @@ See <https://github.com/ansible/ansible/issues/71528> for more information.
 | zookeeper_servers                        | zookeeper-nodes                                                   | See below                                                      |
 | zookeeper_servers_use_inventory_hostname | false                                                             | See below                                                      |
 | zookeeper_environment                    | "JVMFLAGS": "-javaagent:/opt/jolokia/jolokia-jvm-1.6.0-agent.jar" ||
+| zookeeper_config_params                  |                                                                   | A key-value dictionary that will be templated into zoo.cfg     |
 | zookeeper_firewalld                      | false                                                             ||
 
 ## Inventory and zookeeper_servers variable
