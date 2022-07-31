@@ -66,3 +66,7 @@ metricsProvider.className={{ zookeeper_metricsprovider_classname }}
 metricsProvider.httpPort={{ zookeeper_metricsprovider_httpport }}
 metricsProvider.exportJvmInfo={{ zookeeper_metricsprovider_exportjvminfo | ternary('true', 'false') }}
 {% endif %}
+
+{% for key, value in (zookeeper_config_params | default({})).items() %}
+{{key}}={{value}}
+{% endfor %}
