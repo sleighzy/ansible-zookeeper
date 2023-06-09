@@ -10,10 +10,10 @@
         name: java-1.8.0-openjdk
         state: installed
       when: ansible_os_family == "RedHat"
-    
+
     - name: Install python-firewall
       yum:
-        name: 
+        name:
           - python3-firewall
           - firewalld
         state: installed
@@ -21,7 +21,7 @@
 
     - name: Install python-firewall
       yum:
-        name: 
+        name:
           - python-firewall
           - firewalld
         state: installed
