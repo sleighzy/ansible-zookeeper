@@ -71,10 +71,6 @@ provisioner:
         zookeeper_id: 2
       zookeeper-3:
         zookeeper_id: 3
-lint: |
-  set -e
-  yamllint -c ./.yamllint.yaml .
-  ansible-lint -c ./.ansible-lint .
 verifier:
   name: ansible
 scenario:

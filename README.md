@@ -7,8 +7,8 @@ Ansible role for installing and configuring Apache ZooKeeper
 This role can be used to install and cluster multiple ZooKeeper nodes, this uses
 all hosts defined for the "zookeeper-nodes" group in the inventory file by
 default. All servers are added to the zoo.cfg file along with the leader and
-election ports. Firewall ports could be opened after setting true to
-zookeeper_firewalld variable
+election ports. Firewall ports could be opened after setting `true` to
+`zookeeper_firewalld` variable
 
 ## Supported Platforms
 
@@ -56,11 +56,11 @@ See <https://github.com/ansible/ansible/issues/71528> for more information.
 
 ## Inventory and zookeeper_servers variable
 
-zookeeper_servers variable above accepts a list of inventory host names. These
+zookeeper_servers variable above accepts a list of inventory hostnames. These
 will be used in the `zoo.cfg` to configure a multi-server cluster so the hosts
 can find each other. By default, the hostname used in the `zoo.cfg` will be the
 hostname reported by the `hostname` command on the server(provided by the
-ansible_nodename variable). See the example below.
+`ansible_nodename` variable). See the example below.
 
 Assuming the below inventory file, and that the `hostname` command returns only
 the hostname and does not include the domain name.
@@ -152,6 +152,8 @@ Linting should be done using [ansible-lint]
 
 ```sh
 pip3 install ansible-lint --user
+
+ansible-lint -c ./.ansible-lint .
 ```
 
 ## Testing
@@ -165,14 +167,10 @@ As per the [Molecule Installation guide] this should be done using a virtual
 environment. The commands below will create a Python virtual environment and
 install Molecule including the Docker driver.
 
-_Note:_ Due to a breaking change in Molecule 3.1.1 the Docker driver for
-Molecule has been removed and the `molecule-driver` module must be installed
-separately.
-
 ```sh
 $ python3 -m venv molecule-venv
 $ source molecule-venv/bin/activate
-(molecule-venv) $ python3 -m pip install ansible ansible-lint yamllint docker molecule-docker "molecule[docker,lint]"
+(molecule-venv) $ python3 -m pip3 install ansible docker "molecule-plugins[docker]"
 ```
 
 Run playbook and tests. Linting errors need to be corrected before Molecule will
