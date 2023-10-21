@@ -93,7 +93,6 @@ scenario:
     - prepare
     - converge
   test_sequence:
-    - lint
     - destroy
     - dependency
     - syntax
