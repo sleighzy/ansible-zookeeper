@@ -34,7 +34,7 @@ See <https://github.com/ansible/ansible/issues/71528> for more information.
 | Variable                                 | Default                                                           | Comment                                                        |
 | ---------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------- |
 | zookeeper_mirror                         | <http://www-eu.apache.org/dist/zookeeper>                         |                                                                |
-| zookeeper_version                        | 3.7.1                                                             |                                                                |
+| zookeeper_version                        | 3.7.2                                                             |                                                                |
 | zookeeper_package                        | apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz               |                                                                |
 | zookeeper_group                          | zookeeper                                                         |                                                                |
 | zookeeper_user                           | zookeeper                                                         |                                                                |
