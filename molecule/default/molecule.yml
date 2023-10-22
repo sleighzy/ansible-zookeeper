@@ -1,6 +1,10 @@
 ---
 dependency:
   name: galaxy
+  options:
+    ignore-certs: True
+    ignore-errors: True
+    requirements-file: molecule/default/requirements.yml
 driver:
   name: docker
 platforms:

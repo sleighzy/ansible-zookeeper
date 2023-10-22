@@ -6,7 +6,7 @@
     # containers to be able to see and access each other.
     # This requires Ansible 2.2 for this docker_network module.
     - name: Create Docker network
-      community.general.docker_network:
+      community.docker.docker_network:
         name: zookeeper
         ipam_config:
           - subnet: '172.25.0.0/16'
@@ -19,7 +19,7 @@
     # The container needs to be started with the "/usr/lib/systemd/systemd" so that
     # this service is initialized.
     - name: Create Docker containers
-      community.general.docker_container:
+      community.docker.docker_container:
         name: '{{ item.1 }}'
         hostname: '{{ item.1 }}'
         image: centos/systemd
