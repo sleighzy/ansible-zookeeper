@@ -64,25 +64,6 @@
           - ansible_facts.services['zookeeper.service'].state == 'running'
           - ansible_facts.services['zookeeper.service'].status == 'enabled'
 
-    - name: Delete Znode if it already exists
-      when: ansible_hostname == "zookeeper-1"
-      block:
-        - name: Get Znode
-          ansible.builtin.command: /usr/share/zookeeper/bin/zkCli.sh get /TestZnode1
-          when: ansible_hostname == "zookeeper-1"
-          register: command_result
-          failed_when: command_result.rc != 0
-          changed_when: false
-
-        - name: Delete Znode if it already exists
-          ansible.builtin.command: /usr/share/zookeeper/bin/zkCli.sh delete /TestZnode1
-          register: command_result
-          failed_when: command_result.rc != 0
-          when:
-            - ansible_hostname == "zookeeper-1"
-            - '"test-node-1" in command_result.stdout'
-          changed_when: false
-
     - name: Create Znode and assert visible by all servers
       block:
         - name: Create a Znode entry in ZooKeeper
@@ -111,3 +92,22 @@
           ansible.builtin.assert:
             that:
               - '"test-node-1" in command_result.stdout'
+
+    - name: Delete Znode
+      when: ansible_hostname == "zookeeper-1"
+      block:
+        - name: Get Znode
+          ansible.builtin.command: /usr/share/zookeeper/bin/zkCli.sh get /TestZnode1
+          when: ansible_hostname == "zookeeper-1"
+          register: command_result
+          failed_when: command_result.rc != 0
+          changed_when: false
+
+        - name: Delete Znode if it already exists
+          ansible.builtin.command: /usr/share/zookeeper/bin/zkCli.sh delete /TestZnode1
+          register: command_result
+          failed_when: command_result.rc != 0
+          when:
+            - ansible_hostname == "zookeeper-1"
+            - '"test-node-1" in command_result.stdout'
+          changed_when: false
