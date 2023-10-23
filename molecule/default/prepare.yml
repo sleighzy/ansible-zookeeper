@@ -4,15 +4,14 @@
   gather_facts: true
 
   pre_tasks:
-
     - name: Install Java 8 (OpenJDK) on RedHat/CentOS
-      yum:
+      ansible.builtin.yum:
         name: java-1.8.0-openjdk
         state: installed
       when: ansible_os_family == "RedHat"
 
     - name: Install python-firewall
-      yum:
+      ansible.builtin.yum:
         name:
           - python3-firewall
           - firewalld
@@ -20,16 +19,15 @@
       when: ansible_distribution == "Rocky" and ansible_distribution_major_version == "8"
 
     - name: Install python-firewall
-      yum:
+      ansible.builtin.yum:
         name:
           - python-firewall
           - firewalld
         state: installed
       when: ansible_distribution == "CentOs" and ansible_distribution_major_version == "7"
 
-
     - name: Install Java 11 (OpenJDK) on Debian
-      apt:
+      ansible.builtin.apt:
         name: openjdk-11-jdk
         state: present
         update_cache: yes
@@ -41,7 +39,7 @@
     # ZooKeeper service is constantly restarted by systemd which causes
     # the Molecule tests to fail as the service is not started correctly.
     - name: Install ps on Debian
-      apt:
+      ansible.builtin.apt:
         name: procps
         state: present
       when: ansible_os_family == "Debian"
