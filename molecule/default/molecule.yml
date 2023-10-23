@@ -32,7 +32,7 @@ platforms:
     groups:
       - zookeeper-nodes
   - name: zookeeper-2
-    image: centos:7
+    image: rockylinux:8
     networks:
       - name: zookeeper
         ipv4_address: '172.26.10.2'
@@ -44,6 +44,7 @@ platforms:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
     cgroupns_mode: host
     command: '/usr/lib/systemd/systemd'
+    pre_build_image: true
     capabilities:
       - SYS_ADMIN
     groups:
