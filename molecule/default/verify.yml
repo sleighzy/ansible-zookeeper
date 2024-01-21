@@ -16,12 +16,12 @@
           - "'zookeeper' in getent_passwd"
           - "'zookeeper' in getent_group"
 
-    - name: Register '/usr/share/apache-zookeeper-3.7.2' installation directory status
+    - name: Register '/usr/share/apache-zookeeper-3.9.1' installation directory status
       ansible.builtin.stat:
-        path: '/usr/share/apache-zookeeper-3.7.2'
+        path: '/usr/share/apache-zookeeper-3.9.1'
       register: install_dir
 
-    - name: Assert that '/usr/share/apache-zookeeper-3.7.2' directory is created
+    - name: Assert that '/usr/share/apache-zookeeper-3.9.1' directory is created
       ansible.builtin.assert:
         that:
           - install_dir.stat.exists
@@ -39,7 +39,7 @@
         that:
           - zookeeper_dir.stat.exists
           - zookeeper_dir.stat.islnk
-          - zookeeper_dir.stat.lnk_target == '/usr/share/apache-zookeeper-3.7.2'
+          - zookeeper_dir.stat.lnk_target == '/usr/share/apache-zookeeper-3.9.1'
 
     - name: Register '/etc/zookeeper' directory status
       ansible.builtin.stat:
