@@ -1,8 +1,0 @@
-zookeeper-1 ansible_host=zookeeper-1 ansible_connection=docker
-zookeeper-2 ansible_host=zookeeper-2 ansible_connection=docker
-zookeeper-3 ansible_host=zookeeper-3 ansible_connection=docker
-
-[zookeeper-nodes]
-zookeeper-1 zookeeper_id=1
-zookeeper-2 zookeeper_id=2
-zookeeper-3 zookeeper_id=3
