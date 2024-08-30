@@ -11,6 +11,7 @@ ExecStart={{ zookeeper_dir }}/bin/zkServer.sh start
 ExecStop={{ zookeeper_dir }}/bin/zkServer.sh stop
 SuccessExitStatus=143
 Restart=on-failure
+RestartSec=5
 User={{ zookeeper_user }}
 Group={{ zookeeper_group }}
 
