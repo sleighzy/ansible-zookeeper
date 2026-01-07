@@ -9,7 +9,7 @@ driver:
   name: docker
 platforms:
   - name: zookeeper-1
-    image: geerlingguy/docker-debian10-ansible:latest
+    image: geerlingguy/docker-debian13-ansible:latest
     docker_networks:
       - name: zookeeper
         ipam_config:
@@ -70,6 +70,13 @@ platforms:
       - zookeeper-nodes
 provisioner:
   name: ansible
+  env:
+    # Molecule used to add ${MOLECULE_PROJECT_DIRECTORY}/. to this
+    # path for us pre-25.2.0, but now we have to do it ourselves.  See
+    # ansible/molecule#4380 and
+    # https://github.com/ansible/molecule/releases/tag/v25.2.0 for
+    # more details.
+    ANSIBLE_ROLES_PATH: ${MOLECULE_PROJECT_DIRECTORY}/..:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles
   inventory:
     host_vars:
       # The zookeeper_id is not provided for zookeeper-1 as this

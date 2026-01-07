@@ -7,8 +7,8 @@
 - name: Load OS-specific variables
   ansible.builtin.include_vars: '{{ item }}'
   with_first_found:
-    - ../vars/{{ ansible_os_family }}.yml
-    - ../vars/{{ ansible_distribution_release }}.yml
+    - ../vars/{{ ansible_facts["os_family"] }}.yml
+    - ../vars/{{ ansible_facts["distribution_release"] }}.yml
     - ../vars/empty.yml
   tags:
     - always
@@ -218,4 +218,4 @@
 # (Rhel/Rocky) 8 firewall rules
 - name: Install firewall rules
   ansible.builtin.include_tasks: firewalld.yml
-  when: (ansible_os_family == "RedHat" or ansible_os_family == "Rocky") and ansible_distribution_major_version == "8" and zookeeper_firewalld
+  when: (ansible_facts["os_family"] == "RedHat" or ansible_facts["os_family"] == "Rocky") and (ansible_facts["distribution_major_version"] | int) == 8 and zookeeper_firewalld
