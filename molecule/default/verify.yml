@@ -68,20 +68,20 @@
       block:
         - name: Create a Znode entry in ZooKeeper
           ansible.builtin.command: /usr/share/zookeeper/bin/zkCli.sh create /TestZnode1 "test-node-1"
-          when: ansible_hostname == "zookeeper-1"
+          when: ansible_facts["hostname"] == "zookeeper-1"
           register: command_result
           changed_when: false
 
         - name: Output Znode creation command result
           ansible.builtin.debug:
             msg: '{{ command_result }}'
-          when: ansible_hostname == "zookeeper-1"
+          when: ansible_facts["hostname"] == "zookeeper-1"
 
         - name: Assert that the Znode creation command succeeded
           ansible.builtin.assert:
             that:
               - '"Created /TestZnode1" in command_result.stderr'
-          when: ansible_hostname == "zookeeper-1"
+          when: ansible_facts["hostname"] == "zookeeper-1"
 
         - name: Read the created Znode
           ansible.builtin.command: /usr/share/zookeeper/bin/zkCli.sh get /TestZnode1
@@ -94,11 +94,11 @@
               - '"test-node-1" in command_result.stdout'
 
     - name: Delete Znode
-      when: ansible_hostname == "zookeeper-1"
+      when: ansible_facts["hostname"] == "zookeeper-1"
       block:
         - name: Get Znode
           ansible.builtin.command: /usr/share/zookeeper/bin/zkCli.sh get /TestZnode1
-          when: ansible_hostname == "zookeeper-1"
+          when: ansible_facts["hostname"] == "zookeeper-1"
           register: command_result
           failed_when: command_result.rc != 0
           changed_when: false
@@ -108,6 +108,6 @@
           register: command_result
           failed_when: command_result.rc != 0
           when:
-            - ansible_hostname == "zookeeper-1"
+            - ansible_facts["hostname"] == "zookeeper-1"
             - '"test-node-1" in command_result.stdout'
           changed_when: false
